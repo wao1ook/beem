@@ -2,9 +2,9 @@
 
 namespace Emanate\BeemSms\Tests;
 
+use Emanate\BeemSms\BeemSmsServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Emanate\BeemSms\BeemSmsServiceProvider;
 
 class TestCase extends Orchestra
 {

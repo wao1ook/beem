@@ -2,9 +2,9 @@
 
 namespace Emanate\BeemSms;
 
+use Emanate\BeemSms\Commands\BeemSmsCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Emanate\BeemSms\Commands\BeemSmsCommand;
 
 class BeemSmsServiceProvider extends PackageServiceProvider
 {
