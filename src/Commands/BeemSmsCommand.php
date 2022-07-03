@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Emanate\BeemSms\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class BeemSmsCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'beem-sms';
 
     public $description = 'My command';
 
