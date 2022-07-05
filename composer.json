@@ -1,6 +1,6 @@
 {
     "name": "emanate/beem-sms",
-    "description": "Refactoring way of sendeing SMS",
+    "description": "Refactoring way of sending SMS",
     "keywords": [
         "emanate",
         "laravel",
@@ -22,9 +22,9 @@
         "ext-curl": "*"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.8",
         "nunomaduro/collision": "^6.0",
         "nunomaduro/larastan": "^2.0.1",
+        "nunomaduro/phpinsights": "^2.4",
         "orchestra/testbench": "^7.0",
         "pestphp/pest": "^1.21",
         "pestphp/pest-plugin-laravel": "^1.1",
@@ -36,8 +36,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Emanate\\BeemSms\\": "src",
-            "Emanate\\BeemSms\\Database\\Factories\\": "database/factories"
+            "\\Emanate\\BeemSms\\": "src",
+            "\\Emanate\\BeemSms\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
@@ -55,7 +55,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": false,
-            "phpstan/extension-installer": false
+            "phpstan/extension-installer": false,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "extra": {

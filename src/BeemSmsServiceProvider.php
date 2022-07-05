@@ -3,8 +3,12 @@
 namespace Emanate\BeemSms;
 
 use Emanate\BeemSms\Commands\BeemSmsCommand;
+use Illuminate\Notifications\ChannelManager;
+use Illuminate\Notifications\Channels\VonageSmsChannel;
+use Illuminate\Support\Facades\Notification;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Vonage\Client;
 
 class BeemSmsServiceProvider extends PackageServiceProvider
 {
@@ -18,8 +22,15 @@ class BeemSmsServiceProvider extends PackageServiceProvider
         $package
             ->name('beem-sms')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_beem-sms_table')
             ->hasCommand(BeemSmsCommand::class);
+
+        Notification::resolved(function (ChannelManager $service) {
+            $service->extend('beem', function ($app) {
+                return new BeemSmsChannel(
+                    $app->make(BeemSms::class),
+                    $app['config']['beem-sms.sms_from']
+                );
+            });
+        });
     }
 }
