@@ -10,7 +10,7 @@ class BeemSmsServiceProvider extends PackageServiceProvider
     public function configurePackage(Package $package): void
     {
         $package
-            ->name('beem-sms')
+            ->name('beem')
             ->hasConfigFile();
     }
 }

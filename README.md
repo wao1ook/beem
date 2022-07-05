@@ -1,62 +1,42 @@
+# Refactoring way of sending SMS
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
-
-# Refactoring way of sendeing SMS
-
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/emanate/beem-sms.svg?style=flat-square)](https://packagist.org/packages/emanate/beem-sms)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/emanate/beem-sms/run-tests?label=tests)](https://github.com/emanate/beem-sms/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/emanate/beem-sms/Check%20&%20fix%20styling?label=code%20style)](https://github.com/emanate/beem-sms/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/emanate/beem-sms.svg?style=flat-square)](https://packagist.org/packages/emanate/beem-sms)
-
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
-
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/beem-sms.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/beem-sms)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/emanate/beem.svg?style=flat-square)](https://packagist.org/packages/emanate/beem)
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/emanate/beem/run-tests?label=tests)](https://github.com/emanate/beem/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/emanate/beem/Check%20&%20fix%20styling?label=code%20style)](https://github.com/emanate/beem/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/emanate/beem.svg?style=flat-square)](https://packagist.org/packages/emanate/beem)
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require emanate/beem-sms
-```
-
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="beem-sms-migrations"
-php artisan migrate
+composer require emanate/beem
 ```
 
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="beem-sms-config"
+php artisan vendor:publish --tag="beem-config"
 ```
 
 This is the contents of the published config file:
 
 ```php
 return [
+    'api_key' => env('BEEM_SMS_API_KEY', ''),
+
+    'secret_key' => env('BEEM_SMS_SECRET_KEY', ''),
+
+    'sender_name' => env('BEEM_SMS_SENDER_NAME', 'INFO'),
+
+    'api_url' => env('BEEM_SMS_API_URL', 'https://apisms.beem.africa/v1/send'),
 ];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="beem-sms-views"
 ```
 
 ## Usage
 
-```php
-$beemSms = new Emanate\BeemSms();
-echo $beemSms->echoPhrase('Hello, Emanate!');
+```
+Coming Soon
 ```
 
 ## Testing
