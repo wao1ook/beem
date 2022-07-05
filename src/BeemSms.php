@@ -19,8 +19,6 @@ class BeemSms
 
     public function sendMessage()
     {
-        $curl = curl_init();
-
         $payload = [
             'source_addr' => $this->senderName,
             'encoding' => 0,
@@ -36,22 +34,23 @@ class BeemSms
         ini_set('display_errors', 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt_array($ch, [
-            CURLOPT_POST => true,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER => [
+        curl_setopt_array($ch, array(
+            CURLOPT_POST => TRUE,
+            CURLOPT_RETURNTRANSFER => TRUE,
+            CURLOPT_HTTPHEADER => array(
                 'Authorization:Basic ' . base64_encode("$this->apiKey:$this->secretKey"),
-                'Content-Type: application/json',
-            ],
-            CURLOPT_POSTFIELDS => json_encode($payload),
-        ]);
+                'Content-Type: application/json'
+            ),
+            CURLOPT_POSTFIELDS => json_encode($payload)
+        ));
 
         $response = curl_exec($ch);
 
-        $results = json_decode($response, true, 512, 4194304);
+        if ($response === FALSE) {
+            echo $response;
 
-        curl_close($curl);
-
-        dd($results);
+            die(curl_error($ch));
+        }
+        var_dump($response);
     }
 }
