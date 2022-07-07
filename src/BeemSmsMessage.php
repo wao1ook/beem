@@ -13,21 +13,14 @@ class BeemSmsMessage
     public string $content;
 
     /**
-     * The phone number the message should be sent from.
+     * The sender name the message should have.
      *
      * @var string
      */
-    public string $from;
+    public string $senderName;
 
     /**
-     * The message type.
-     *
-     * @var string
-     */
-    public string $type = 'text';
-
-    /**
-     * The custom Vonage client instance.
+     * The custom Beem Sms instance.
      *
      * @var \Emanate\BeemSms\|null
      */
@@ -58,14 +51,14 @@ class BeemSmsMessage
     }
 
     /**
-     * Set the phone number the message should be sent from.
+     * Set the sender name the message should have.
      *
-     * @param string $from
+     * @param string $senderName
      * @return $this
      */
-    public function from(string $from)
+    public function senderName(string $senderName)
     {
-        $this->from = $from;
+        $this->senderName = $senderName;
 
         return $this;
     }

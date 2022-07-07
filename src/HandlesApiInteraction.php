@@ -3,6 +3,10 @@
 namespace Emanate\BeemSms;
 
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\Factory;
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Http;
 
 trait HandlesApiInteraction
 {
@@ -11,12 +15,12 @@ trait HandlesApiInteraction
      * @param $credentials
      * @param $url
      * @param $payload
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
-     * @throws \Illuminate\Http\Client\RequestException
+     * @return Response
+     * @throws RequestException
      */
-    public function send($debug = false, $credentials, $url, $payload)
+    public function sendSms($debug, $credentials, $url, $payload): Response
     {
-        $response = (new \Illuminate\Http\Client\Factory)->retry(3, 100, function ($exception) {
+        return Http::retry(3, 100, function ($exception) {
             return $exception instanceof ConnectionException;
         })
             ->withOptions([
@@ -27,20 +31,18 @@ trait HandlesApiInteraction
                 'Content-Type: application/json'
             ])->post($url, $payload)
             ->throw();
-
-        return $response;
     }
 
     /**
      * @param $debug
      * @param $credentials
      * @param $url
-     * @return void
-     * @throws \Illuminate\Http\Client\RequestException
+     * @return Response
+     * @throws RequestException
      */
-    public function balance($debug = false, $credentials, $url)
+    public function checkBalance($debug, $credentials, $url): Response
     {
-        $response = (new \Illuminate\Http\Client\Factory)->retry(3, 100, function ($exception) {
+        return Http::retry(3, 100, function ($exception) {
             return $exception instanceof ConnectionException;
         })
             ->withOptions([
