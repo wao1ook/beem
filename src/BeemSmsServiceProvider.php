@@ -42,17 +42,17 @@ class BeemSmsServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/beem-sms.php', 'beem-sms');
 
         $this->app->singleton(BeemSms::class, function () {
-            return new BeemSms(config('beem.sms'));
+            return new BeemSms(config('beem-sms'));
         });
 
-        Notification::resolved(function (ChannelManager $service) {
-            $service->extend('beem', function ($app) {
-                return new BeemSmsChannel(
-                    $app->make(BeemSms::class),
-                    $app['config']['beem-sms.sender_name']
-                );
-            });
-        });
+//        Notification::resolved(function (ChannelManager $service) {
+//            $service->extend('beem', function ($app) {
+//                return new BeemSmsChannel(
+//                    $app->make(BeemSms::class),
+//                    $app['config']['beem-sms.sender_name']
+//                );
+//            });
+//        });
     }
 
 

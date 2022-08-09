@@ -17,9 +17,10 @@
     ],
     "require": {
         "php": "^8.1",
-        "spatie/laravel-package-tools": "^1.9.2",
+        "ext-curl": "*",
+        "guzzlehttp/guzzle": "^7.0",
         "illuminate/contracts": "^9.0",
-        "ext-curl": "*"
+        "spatie/laravel-package-tools": "^1.9.2"
     },
     "require-dev": {
         "nunomaduro/collision": "^6.0",
@@ -36,8 +37,8 @@
     },
     "autoload": {
         "psr-4": {
-            "\\Emanate\\BeemSms\\": "src",
-            "\\Emanate\\BeemSms\\Database\\Factories\\": "database/factories"
+            "Emanate\\BeemSms\\": "src",
+            "Emanate\\BeemSms\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
