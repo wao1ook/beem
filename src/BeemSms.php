@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Emanate\BeemSms;
 
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Http\Client;
-use Psr\Http\Message\StreamInterface;
-use RuntimeException;
 
 class BeemSms
 {
@@ -99,10 +96,9 @@ class BeemSms
     }
 
     /**
-     * @return StreamInterface
      * @throws GuzzleException
      */
-    public function balance(): StreamInterface
+    public function balance()
     {
         $client = new \GuzzleHttp\Client();
 
