@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Emanate\BeemSms;
 
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Facades\Http;
 
 class BeemSms
 {
@@ -74,25 +75,37 @@ class BeemSms
 
     public function send()
     {
-        $client = new \GuzzleHttp\Client();
+//        $client = new \GuzzleHttp\Client();
+//
+//        $response = $client->post(
+//            BeemSms::SENDING_SMS_URL,
+//            [
+//                'verify' => false,
+//                'auth' => [$this->config['api_key'], $this->config['secret_key']],
+//                'headers' => [
+//                    'Content-Type' => 'application/json',
+//                    'Accept' => 'application/json',
+//                ],
+//                'json' => [
+//                    'source_addr' => $this->config['sender_name'],
+//                    'message' => $this->message,
+//                    'encoding' => 0,
+//                    'recipients' => $this->recipients,
+//                ],
+//            ]
+//        );
 
-        $response = $client->post(
-            BeemSms::SENDING_SMS_URL,
-            [
-                'verify' => false,
-                'auth' => [config('beem-sms.api_key'), config('beem-sms.secret_key')],
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ],
-                'json' => [
-                    'source_addr' => config('beem-sms.sender_name'),
-                    'message' => $this->message,
-                    'encoding' => 0,
-                    'recipients' => $this->recipients,
-                ],
-            ]
-        );
+        return Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode($this->config['api_key'] . ':' . $this->config['secret_key'])
+        ])->withOptions([
+            'debug' => $this->config['debug']
+        ])->post(BeemSms::SENDING_SMS_URL, [
+            'source_addr' => $this->config['sender_name'],
+            'message' => $this->message,
+            'encoding' => 0,
+            'recipients' => $this->recipients,
+        ]);
     }
 
     /**
@@ -106,7 +119,7 @@ class BeemSms
             BeemSms::CHECK_BALANCE,
             [
                 'verify' => false,
-                'auth' => [config('beem-sms.api_key'), config('beem-sms.secret_key')],
+                'auth' => [$this->config['api_key'], $this->config['secret_key']],
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
