@@ -1,56 +1,89 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Emanate\BeemSms;
+
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class BeemSms
 {
-    public string $apiUrl;
-    public string $apiKey;
-    public string $secretKey;
-    public string $senderName;
+    public string $message;
 
-    public function __construct(array $config)
+    public string $url = 'https://apisms.beem.africa/v1/send';
+
+    public array $recipientAddress;
+
+    /**
+     * @return void
+     *
+     * @throws GuzzleException
+     */
+    public function send(): void
     {
-        $this->apiUrl = $config['api_url'];
-        $this->apiKey = $config['api_key'];
-        $this->secretKey = $config['secret_key'];
-        $this->senderName = $config['sender_name'];
+        $client = new Client();
+
+        $response = $client->post(
+            $this->url,
+            [
+                'verify' => false,
+                'auth' => [config('beem-sms.api_key'), config('beem-sms.secret_key')],
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ],
+                'json' => [
+                    'source_addr' => config('beem-sms.sender_name'),
+                    'message' => $this->message,
+                    'encoding' => 0,
+                    'recipients' => $this->recipientAddress,
+                ],
+            ]
+        );
     }
 
-    public function sendMessage()
+    /**
+     * @param array $recipients
+     * @return $this
+     */
+    public function getRecipients(array $recipients = []): static
     {
-        $payload = [
-            'source_addr' => $this->senderName,
-            'encoding' => 0,
-            'schedule_time' => '',
-            'message' => 'Test SMS',
-            'recipients' => [
-                ['recipient_id' => '1', 'dest_addr' => '255656791558'],
-            ],
-        ];
+        $recipient = [];
 
-        $ch = curl_init($this->apiUrl);
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt_array($ch, array(
-            CURLOPT_POST => TRUE,
-            CURLOPT_RETURNTRANSFER => TRUE,
-            CURLOPT_HTTPHEADER => array(
-                'Authorization:Basic ' . base64_encode("$this->apiKey:$this->secretKey"),
-                'Content-Type: application/json'
-            ),
-            CURLOPT_POSTFIELDS => json_encode($payload)
-        ));
-
-        $response = curl_exec($ch);
-
-        if ($response === FALSE) {
-            echo $response;
-
-            die(curl_error($ch));
+        foreach ($recipients as $eachRecipient) {
+            $recipient[] = array_fill_keys(['dest_addr'], $eachRecipient);
         }
-        var_dump($response);
+
+        $recipientAddress = [];
+
+        foreach ($recipient as $singleRecipient) {
+            $recipientAddress[] = array_merge(
+                ['recipient_id' => rand(00000000, 999999999)],
+                $singleRecipient
+            );
+        }
+
+        $this->recipientAddress = $recipientAddress;
+
+        Log::debug('Recipients: ' . json_encode($recipientAddress));
+
+        return $this;
+    }
+
+    /**
+     * @param string $message
+     * @return $this
+     */
+    public function content(string $message = ''): static
+    {
+        $this->message = $message;
+
+        return $this;
     }
 }
+
+
+
