@@ -30,7 +30,7 @@ class BeemSms
             $this->url,
             [
                 'verify' => false,
-                'auth' => [config('beem-sms.api_key'), config('secret_key')],
+                'auth' => [config('beem-sms.api_key'), config('beem-sms.secret_key')],
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
