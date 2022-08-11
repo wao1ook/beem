@@ -16,10 +16,10 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8.0",
         "ext-curl": "*",
         "guzzlehttp/guzzle": "^7.0",
-        "illuminate/contracts": "^9.0",
+        "illuminate/contracts": "^8.0|^9.0",
         "spatie/laravel-package-tools": "^1.9.2"
     },
     "require-dev": {
@@ -32,13 +32,11 @@
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
-        "phpunit/phpunit": "^9.5",
-        "spatie/laravel-ray": "^1.26"
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {
-            "Emanate\\BeemSms\\": "src",
-            "Emanate\\BeemSms\\Database\\Factories\\": "database/factories"
+            "Emanate\\BeemSms\\": "src"
         }
     },
     "autoload-dev": {

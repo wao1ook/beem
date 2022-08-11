@@ -46,7 +46,7 @@ class BeemSms
     }
 
     /**
-     * @param  array  $recipients
+     * @param array $recipients
      * @return $this
      */
     public function getRecipients(array $recipients = []): static
@@ -68,13 +68,13 @@ class BeemSms
 
         $this->recipientAddress = $recipientAddress;
 
-        Log::debug('Recipients: '.json_encode($recipientAddress));
+        Log::debug('Recipients: ' . json_encode($recipientAddress));
 
         return $this;
     }
 
     /**
-     * @param  string  $message
+     * @param string $message
      * @return $this
      */
     public function content(string $message = ''): static
