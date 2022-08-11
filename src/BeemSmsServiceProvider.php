@@ -11,7 +11,7 @@ class BeemSmsServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/beem.php', 'beem');
 
         $this->app->bind('beem-sms', function () {
-            return new BeemSms(config('beem'));
+            return new BeemSms;
         });
     }
 
