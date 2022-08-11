@@ -2,7 +2,6 @@
 
 namespace Emanate\BeemSms;
 
-use Emanate\BeemSms\Commands\BeemSmsCommand;
 use Illuminate\Notifications\ChannelManager;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\ServiceProvider;
