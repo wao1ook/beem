@@ -12,10 +12,10 @@ class BeemSmsServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/beem-sms.php', 'beem-sms');
+        $this->mergeConfigFrom(__DIR__.'/../config/beem.php', 'beem');
 
         $this->app->bind('beem-sms', function () {
-            return new BeemSms(config('beem-sms'));
+            return new BeemSms(config('beem'));
         });
     }
 
@@ -24,8 +24,8 @@ class BeemSmsServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/beem-sms.php' => $this->app->configPath('beem-sms.php'),
-            ], 'beem-sms');
+                __DIR__.'/../config/beem.php' => $this->app->configPath('beem.php'),
+            ], 'beem');
         }
     }
 }

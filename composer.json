@@ -1,12 +1,12 @@
 {
-    "name": "emanate/beem-sms",
+    "name": "emanate/beem",
     "description": "Refactoring way of sending SMS",
     "keywords": [
         "emanate",
         "laravel",
         "beem-sms"
     ],
-    "homepage": "https://github.com/emanate/beem-sms",
+    "homepage": "https://github.com/wao1ook/beem",
     "license": "MIT",
     "authors": [
         {
