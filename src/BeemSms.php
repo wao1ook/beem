@@ -46,6 +46,20 @@ class BeemSms
     }
 
     /**
+     * @param mixed $collection
+     * @param string $column
+     * @return BeemSms
+     */
+    public function loadRecipients(mixed $collection, string $column = 'phone_number'): static
+    {
+        $recipients = $collection->map(fn($item) => $item[$column])->toArray();
+
+        Log::debug($recipients);
+
+        return $this->getRecipients($recipients);
+    }
+
+    /**
      * @param array $recipients
      * @return $this
      */
