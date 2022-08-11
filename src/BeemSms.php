@@ -54,8 +54,6 @@ class BeemSms
     {
         $recipients = $collection->map(fn($item) => $item[$column])->toArray();
 
-        Log::debug($recipients);
-
         return $this->getRecipients($recipients);
     }
 
@@ -81,8 +79,6 @@ class BeemSms
         }
 
         $this->recipientAddress = $recipientAddress;
-
-        Log::debug('Recipients: ' . json_encode($recipientAddress));
 
         return $this;
     }

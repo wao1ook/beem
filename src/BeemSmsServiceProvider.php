@@ -2,11 +2,7 @@
 
 namespace Emanate\BeemSms;
 
-use Illuminate\Notifications\ChannelManager;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\ServiceProvider;
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class BeemSmsServiceProvider extends ServiceProvider
 {
