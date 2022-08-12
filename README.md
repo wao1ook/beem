@@ -54,7 +54,7 @@ If you are using a different name for your column or property for phone numbers 
 use Emanate\BeemSms\Facades\BeemSms;
 
 
-BeemSms::content('Your message here')->loadRecipients(User::all(), phone)->send();
+BeemSms::content('Your message here')->loadRecipients(User::all(), 'column_name')->send();
 ```
 
 If you plan on generating your phone number addresses, you could use the getRecipients() method. Be advised, that the getRecipients() method will receive variables in an array format.
