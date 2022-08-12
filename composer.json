@@ -29,12 +29,12 @@
         "phpunit/phpunit": "^9.5"
     },
     "autoload": {
-        "psr-4": {
-            "Emanate\\BeemSms\\": "src"
-        },
         "files": [
             "src/Support/helpers.php"
-        ]
+        ],
+        "psr-4": {
+            "Emanate\\BeemSms\\": "src"
+        }
     },
     "autoload-dev": {
         "psr-4": {
