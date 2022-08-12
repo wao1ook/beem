@@ -9,7 +9,7 @@ class BeemSms
      *
      * @return string
      */
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
         return 'beem-sms';
     }

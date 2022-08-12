@@ -6,8 +6,7 @@ namespace Emanate\BeemSms;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
+use Psr\Http\Message\ResponseInterface;
 
 class BeemSms
 {
@@ -18,11 +17,11 @@ class BeemSms
     public array $recipientAddress;
 
     /**
-     * @return void
+     * @return ResponseInterface
      *
      * @throws GuzzleException
      */
-    public function send(): void
+    public function send(): ResponseInterface
     {
         $client = new Client();
 
@@ -43,6 +42,8 @@ class BeemSms
                 ],
             ]
         );
+
+        return $response;
     }
 
     /**
