@@ -6,8 +6,7 @@ namespace Emanate\BeemSms;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
+use Psr\Http\Message\ResponseInterface;
 
 class BeemSms
 {
@@ -18,15 +17,15 @@ class BeemSms
     public array $recipientAddress;
 
     /**
-     * @return void
+     * @return ResponseInterface
      *
      * @throws GuzzleException
      */
-    public function send(): void
+    public function send(): ResponseInterface
     {
         $client = new Client();
 
-        $response = $client->post(
+        return $client->post(
             $this->url,
             [
                 'verify' => false,
@@ -43,6 +42,18 @@ class BeemSms
                 ],
             ]
         );
+    }
+
+    /**
+     * @param mixed $collection
+     * @param string $column
+     * @return BeemSms
+     */
+    public function loadRecipients(mixed $collection, string $column = 'phone_number'): static
+    {
+        $recipients = $collection->map(fn($item) => $item[$column])->toArray();
+
+        return $this->getRecipients($recipients);
     }
 
     /**
@@ -67,8 +78,6 @@ class BeemSms
         }
 
         $this->recipientAddress = $recipientAddress;
-
-        Log::debug('Recipients: ' . json_encode($recipientAddress));
 
         return $this;
     }

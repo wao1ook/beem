@@ -2,30 +2,49 @@
 
 namespace Emanate\BeemSms;
 
-use Illuminate\Notifications\ChannelManager;
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class BeemSmsServiceProvider extends ServiceProvider
+class BeemSmsServiceProvider extends ServiceProvider implements DeferrableProvider
 {
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/beem-sms.php', 'beem-sms');
+        $this->mergeConfigFrom(__DIR__ . '/../config/beem.php', 'beem');
 
-        $this->app->bind('beem-sms', function () {
-            return new BeemSms(config('beem-sms'));
+        $this->app->bind('beem-sms', function ($app) {
+            return new BeemSms;
         });
     }
 
-
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
     public function boot()
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/beem-sms.php' => $this->app->configPath('beem-sms.php'),
-            ], 'beem-sms');
+                __DIR__ . '/../config/beem.php' => $this->app->configPath('beem.php'),
+            ], 'beem');
         }
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [
+            BeemSms::class,
+            'beem-sms'
+        ];
     }
 }

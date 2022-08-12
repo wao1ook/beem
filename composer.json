@@ -1,12 +1,12 @@
 {
-    "name": "emanate/beem-sms",
+    "name": "emanate/beem",
     "description": "Refactoring way of sending SMS",
     "keywords": [
         "emanate",
         "laravel",
         "beem-sms"
     ],
-    "homepage": "https://github.com/emanate/beem-sms",
+    "homepage": "https://github.com/wao1ook/beem",
     "license": "MIT",
     "authors": [
         {
@@ -18,9 +18,7 @@
     "require": {
         "php": "^8.0",
         "ext-curl": "*",
-        "guzzlehttp/guzzle": "^7.0",
-        "illuminate/contracts": "^8.0|^9.0",
-        "spatie/laravel-package-tools": "^1.9.2"
+        "guzzlehttp/guzzle": "^7.0"
     },
     "require-dev": {
         "nunomaduro/collision": "^6.0",
@@ -28,13 +26,12 @@
         "nunomaduro/phpinsights": "^2.4",
         "orchestra/testbench": "^7.0",
         "pestphp/pest": "^1.21",
-        "pestphp/pest-plugin-laravel": "^1.1",
-        "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan-deprecation-rules": "^1.0",
-        "phpstan/phpstan-phpunit": "^1.0",
         "phpunit/phpunit": "^9.5"
     },
     "autoload": {
+        "files": [
+            "src/Support/helpers.php"
+        ],
         "psr-4": {
             "Emanate\\BeemSms\\": "src"
         }
@@ -45,10 +42,8 @@
         }
     },
     "scripts": {
-        "analyse": "vendor/bin/phpstan analyse",
         "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage",
-        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
+        "test-coverage": "vendor/bin/pest --coverage"
     },
     "config": {
         "sort-packages": true,
