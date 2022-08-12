@@ -16,7 +16,7 @@ composer require emanate/beem
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="beem-config"
+php artisan vendor:publish --tag="beem"
 ```
 
 This is the contents of the published config file:
