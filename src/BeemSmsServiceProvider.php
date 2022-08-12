@@ -34,7 +34,7 @@ class BeemSmsServiceProvider extends ServiceProvider implements DeferrableProvid
     {
         return [
             BeemSms::class,
-            'beem'
+            'beem-sms'
         ];
     }
 }
