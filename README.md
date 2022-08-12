@@ -35,8 +35,35 @@ return [
 
 ## Usage
 
+Sending SMS using a Facade
+```php
+use Emanate\BeemSms\Facades\BeemSms;
+
+
+BeemSms::content('Your message here')->loadRecipients(User::all())->send();
 ```
-Coming Soon
+or a helper
+
+```php
+beem()->content('Your message here')->loadRecipients(User::all())->send();
+```
+
+If you are using a different name for your column or property for phone numbers on your model or collection while using the loadRecipients() method, you should explicitly specify it on the method. By default, 'phone_number' is used.
+
+```php
+use Emanate\BeemSms\Facades\BeemSms;
+
+
+BeemSms::content('Your message here')->loadRecipients(User::all(), phone)->send();
+```
+
+If you plan on generating your phone number addresses, you could use the getRecipients() method. Be advised, that the getRecipients() method will receive variables in an array format.
+
+```php
+use Emanate\BeemSms\Facades\BeemSms;
+
+
+BeemSms::content('Your message here')->getRecipients(array('255700000000', '255711111111', '255722222222'))->send();
 ```
 
 ## Testing
