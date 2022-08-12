@@ -2,7 +2,9 @@
 
 namespace Emanate\BeemSms\Facades;
 
-class BeemSms
+use Illuminate\Support\Facades\Facade;
+
+class BeemSms extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -11,6 +13,6 @@ class BeemSms
      */
     protected static function getFacadeAccessor(): string
     {
-        return 'Emanate\BeemSms\BeemSms';
+        return 'beem-sms';
     }
 }

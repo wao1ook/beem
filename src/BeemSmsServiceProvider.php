@@ -11,7 +11,7 @@ class BeemSmsServiceProvider extends ServiceProvider implements DeferrableProvid
     {
         $this->mergeConfigFrom(__DIR__.'/../config/beem.php', 'beem');
 
-        $this->app->bind('Emanate\BeemSms\BeemSms', function ($app) {
+        $this->app->bind('beem-sms', function ($app) {
             return new BeemSms;
         });
 
