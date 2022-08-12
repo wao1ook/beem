@@ -1,9 +1,9 @@
-# Refactoring way of sending SMS
+<p align="center"><img src="https://beem.africa/wp-content/uploads/2020/12/Beem-menu-logo-02.svg" width="400"></p>
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/emanate/beem.svg?style=flat-square)](https://packagist.org/packages/emanate/beem)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/emanate/beem/run-tests?label=tests)](https://github.com/emanate/beem/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/emanate/beem/Check%20&%20fix%20styling?label=code%20style)](https://github.com/emanate/beem/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/emanate/beem.svg?style=flat-square)](https://packagist.org/packages/emanate/beem)
+# Beem Africa SMS Package for Laravel Applications
+[![Latest Stable Version](http://poser.pugx.org/emanate/beem/v)](https://packagist.org/packages/emanate/beem)
+[![Total Downloads](http://poser.pugx.org/emanate/beem/downloads)](https://packagist.org/packages/emanate/beem) 
+[![License](http://poser.pugx.org/emanate/beem/license)](https://packagist.org/packages/emanate/beem) 
 
 ## Installation
 
