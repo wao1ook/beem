@@ -11,6 +11,6 @@ class BeemSms
      */
     protected static function getFacadeAccessor(): string
     {
-        return 'beem-sms';
+        return 'Emanate\BeemSms\BeemSms';
     }
 }
