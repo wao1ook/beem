@@ -25,7 +25,7 @@ class BeemSms
     {
         $client = new Client();
 
-        $response = $client->post(
+        return $client->post(
             $this->url,
             [
                 'verify' => false,
@@ -42,8 +42,6 @@ class BeemSms
                 ],
             ]
         );
-
-        return $response;
     }
 
     /**
