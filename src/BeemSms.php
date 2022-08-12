@@ -29,13 +29,13 @@ class BeemSms
             $this->url,
             [
                 'verify' => false,
-                'auth' => [config('beem-sms.api_key'), config('beem-sms.secret_key')],
+                'auth' => [config('beem.api_key'), config('beem.secret_key')],
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                 ],
                 'json' => [
-                    'source_addr' => config('beem-sms.sender_name'),
+                    'source_addr' => config('beem.sender_name'),
                     'message' => $this->message,
                     'encoding' => 0,
                     'recipients' => $this->recipientAddress,
