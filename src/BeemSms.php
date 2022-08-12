@@ -12,7 +12,7 @@ class BeemSms
 {
     public string $message;
 
-    public string $url = config('beem-sms.api_url');
+    public string $url = 'https://apisms.beem.africa/v1/send';
 
     public array $recipientAddress;
 
