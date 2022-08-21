@@ -58,6 +58,7 @@ class BeemSms
         $this->apiKey = config('beem.api_key');
         $this->secretKey = config('beem.secret_key');
         $this->senderName = config('beem.sender_name');
+        $this->url = 'https://apisms.beem.africa/v1/send';
     }
 
     /**
