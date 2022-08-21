@@ -84,17 +84,6 @@ class BeemSms
     }
 
     /**
-     * @param string $senderName
-     * @return $this
-     */
-    public function senderName(string $senderName = ''): static
-    {
-        $this->senderName = $senderName;
-
-        return $this;
-    }
-
-    /**
      * @return ResponseInterface
      *
      * @throws GuzzleException
