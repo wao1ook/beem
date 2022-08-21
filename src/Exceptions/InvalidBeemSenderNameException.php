@@ -19,6 +19,6 @@ class InvalidBeemSenderNameException extends Exception
 
     public function render()
     {
-        return response('Your Sender Name is wrongly set or missing.');
+        return response('Your Sender Name is wrongly set or missing.', 417);
     }
 }

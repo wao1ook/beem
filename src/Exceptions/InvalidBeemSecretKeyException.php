@@ -24,6 +24,6 @@ class InvalidBeemSecretKeyException extends Exception
      */
     public function render(): Response
     {
-        return response('Your Beem Secret Key is wrongly set or missing.');
+        return response('Your Beem Secret Key is wrongly set or missing.', 417);
     }
 }

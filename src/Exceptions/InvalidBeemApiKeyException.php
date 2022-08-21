@@ -19,6 +19,6 @@ class InvalidBeemApiKeyException extends Exception
 
     public function render()
     {
-        return response('Your Beem Api Key is wrongly set or missing.');
+        return response('Your Beem Api Key is wrongly set or missing.', 417);
     }
 }
