@@ -12,7 +12,7 @@ class BeemSmsServiceProvider extends ServiceProvider implements DeferrableProvid
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/beem.php', 'beem');
 
@@ -26,7 +26,7 @@ class BeemSmsServiceProvider extends ServiceProvider implements DeferrableProvid
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -40,7 +40,7 @@ class BeemSmsServiceProvider extends ServiceProvider implements DeferrableProvid
      *
      * @return array
      */
-    public function provides()
+    public function provides(): array
     {
         return [
             BeemSms::class,
