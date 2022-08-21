@@ -51,9 +51,9 @@ class BeemSms
      */
     public function __construct()
     {
-        if (config('beem.api_key') !== null || config('beem.api_key') !== '') throw new InvalidBeemApiKeyException;
-        if (config('beem.secret_key') !== null || config('beem.secret_key') !== '') throw new InvalidBeemSecretKeyException();
-        if (config('beem.sender_name') !== null || config('beem.sender_name') !== '') throw new InvalidBeemSenderNameException();
+        if (config('beem.api_key') === null || config('beem.api_key') === '') throw new InvalidBeemApiKeyException;
+        if (config('beem.secret_key') === null || config('beem.secret_key') === '') throw new InvalidBeemSecretKeyException();
+        if (config('beem.sender_name') === null || config('beem.sender_name') === '') throw new InvalidBeemSenderNameException();
 
         $this->apiKey = config('beem.api_key');
         $this->secretKey = config('beem.secret_key');
