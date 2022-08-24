@@ -28,8 +28,6 @@ return [
     'secret_key' => env('BEEM_SMS_SECRET_KEY', ''),
 
     'sender_name' => env('BEEM_SMS_SENDER_NAME', 'INFO'),
-
-    'api_url' => env('BEEM_SMS_API_URL', 'https://apisms.beem.africa/v1/send'),
 ];
 ```
 
@@ -73,7 +71,7 @@ use Emanate\BeemSms\Facades\BeemSms;
 
 
 BeemSms::content('Your message here')
-->loadRecipients($users, 'phone')
+->loadRecipients(User::all(), 'column_name')
 ->apiKey('your custom api key')
 ->secretKey('your custom secret key')
 ->send();
