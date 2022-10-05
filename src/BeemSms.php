@@ -123,7 +123,7 @@ final class BeemSms
      */
     public function loadRecipients(mixed $collection, string $column = 'phone_number'): BeemSms
     {
-        $recipients = $collection->transform(fn ($item) => $item[$column])->toArray();
+        $recipients = $collection->map(fn ($item) => $item[$column])->toArray();
 
         return $this->getRecipients($recipients);
     }
