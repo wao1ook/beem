@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Emanate\BeemSms;
 
 use Emanate\BeemSms\Classes\Validator;
-use Emanate\BeemSms\Exceptions\InvalidBeemApiKeyException;
-use Emanate\BeemSms\Exceptions\InvalidBeemSecretKeyException;
-use Emanate\BeemSms\Exceptions\InvalidBeemSenderNameException;
-use Error;
+use Emanate\BeemSms\Exceptions\InvalidBeemApiKey;
+use Emanate\BeemSms\Exceptions\InvalidBeemSecretKey;
+use Emanate\BeemSms\Exceptions\InvalidBeemSenderName;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -17,46 +16,47 @@ use Psr\Http\Message\ResponseInterface;
 class BeemSms
 {
     /**
-     * @var string
+     * API Key
      */
     protected string $apiKey;
 
     /**
-     * @var string
+     * API Secret Key
      */
     protected string $secretKey;
 
     /**
-     * @var string
+     * Sender Name registered by Beem
      */
     protected string $senderName;
 
     /**
-     * @var string
+     * The message to be sent.
      */
-    public string $message;
+    protected string $message;
+
+    protected string $url;
+
+    protected array $recipientAddress;
 
     /**
-     * @var string
-     */
-    public string $url;
-
-    /**
-     * @var array
-     */
-    public array $recipientAddress;
-
-
-    /**
-     * @throws InvalidBeemApiKeyException
-     * @throws InvalidBeemSecretKeyException
-     * @throws InvalidBeemSenderNameException
+     * @throws InvalidBeemApiKey
+     * @throws InvalidBeemSecretKey
+     * @throws InvalidBeemSenderName
      */
     public function __construct()
     {
-        if (config('beem.api_key') === null || config('beem.api_key') === '') throw new InvalidBeemApiKeyException;
-        if (config('beem.secret_key') === null || config('beem.secret_key') === '') throw new InvalidBeemSecretKeyException();
-        if (config('beem.sender_name') === null || config('beem.sender_name') === '') throw new InvalidBeemSenderNameException();
+        if (config('beem.api_key') === null || config('beem.api_key') === '') {
+            throw new InvalidBeemApiKey();
+        }
+
+        if (config('beem.secret_key') === null || config('beem.secret_key') === '') {
+            throw new InvalidBeemSecretKey();
+        }
+
+        if (config('beem.sender_name') === null || config('beem.sender_name') === '') {
+            throw new InvalidBeemSenderName();
+        }
 
         $this->apiKey = config('beem.api_key');
         $this->secretKey = config('beem.secret_key');
@@ -65,7 +65,7 @@ class BeemSms
     }
 
     /**
-     * @param string $apiKey
+     * @param  string  $apiKey
      * @return $this
      */
     public function apiKey(string $apiKey = ''): static
@@ -76,7 +76,7 @@ class BeemSms
     }
 
     /**
-     * @param string $secretKey
+     * @param  string  $secretKey
      * @return BeemSms
      */
     public function secretKey(string $secretKey = ''): static
@@ -115,31 +115,29 @@ class BeemSms
     }
 
     /**
-     * @param mixed $collection
-     * @param string $column
+     * @param  mixed  $collection
+     * @param  string  $column
      * @return BeemSms
+     *
      * @throws Exception
      */
     public function loadRecipients(mixed $collection, string $column = 'phone_number'): static
     {
-        $recipients = $collection->map(fn($item) => $item[$column])->toArray();
+        $recipients = $collection->map(fn ($item) => $item[$column])->toArray();
 
         return $this->getRecipients($recipients);
     }
 
     /**
-     * @param array $recipients
+     * @param  array  $recipients
      * @return $this
+     *
      * @throws Exception
      */
-    public function getRecipients(array $recipients = []): static
+    public function getRecipients(array $recipients): static
     {
-        if (empty($recipients)) {
+        if (count($recipients)) {
             throw new Exception('Recipients should not be empty');
-        }
-
-        if (!is_array($recipients)) {
-            throw new Error('Recipients should be an array.');
         }
 
         if (config('beem.validate_phone_addresses')) {
@@ -167,7 +165,7 @@ class BeemSms
     }
 
     /**
-     * @param string $message
+     * @param  string  $message
      * @return $this
      */
     public function content(string $message = ''): static
@@ -177,6 +175,3 @@ class BeemSms
         return $this;
     }
 }
-
-
-

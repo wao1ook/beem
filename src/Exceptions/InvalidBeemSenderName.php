@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Emanate\BeemSms\Exceptions;
 
 use Exception;
 use Illuminate\Http\Response;
 
-class InvalidBeemSecretKeyException extends Exception
+class InvalidBeemSenderName extends Exception
 {
     /**
      * Report the exception
@@ -24,6 +26,6 @@ class InvalidBeemSecretKeyException extends Exception
      */
     public function render(): Response
     {
-        return response('Your Beem Secret Key is wrongly set or missing.', 417);
+        return response('Your Sender Name is wrongly set or missing.', 417);
     }
 }

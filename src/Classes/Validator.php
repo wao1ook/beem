@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Emanate\BeemSms\Classes;
 
-use Emanate\BeemSms\Exceptions\ValidationException;
+use Emanate\BeemSms\Exceptions\InvalidPhoneAddress;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -11,7 +13,7 @@ class Validator
     /**
      * List of phone address prefixes.
      *
-     * @var array|string[]
+     * @var array
      */
     protected static array $phoneAddressPrefix = [
         '25562',
@@ -27,15 +29,15 @@ class Validator
     ];
 
     /**
-     * @return array|string[]
+     * @return array
      */
-    public static function getPhoneAddressPrefix(): array
+    protected static function getPhoneAddressPrefix(): array
     {
         return static::$phoneAddressPrefix;
     }
 
     /**
-     * @param array $phoneAddresses
+     * @param  array  $phoneAddresses
      * @return bool
      */
     public function validate(array $phoneAddresses): bool
@@ -45,14 +47,14 @@ class Validator
     }
 
     /**
-     * @param array $phoneAddresses
+     * @param  array  $phoneAddresses
      * @return bool
      */
     protected function validatePhoneAddressPrefix(array $phoneAddresses): bool
     {
         Arr::map($phoneAddresses, function ($phoneAddress) {
-            if (!Str::startsWith($phoneAddress, static::getPhoneAddressPrefix())) {
-                throw new ValidationException('This phone number: ' . $phoneAddress . ' is wrongly formatted');
+            if (! Str::startsWith($phoneAddress, static::getPhoneAddressPrefix())) {
+                throw new InvalidPhoneAddress('This phone number: '.$phoneAddress.' is wrongly formatted');
             }
         });
 
@@ -60,14 +62,14 @@ class Validator
     }
 
     /**
-     * @param array $phoneAddresses
+     * @param  array  $phoneAddresses
      * @return bool
      */
     protected function validatePhoneAddressLength(array $phoneAddresses): bool
     {
         Arr::map($phoneAddresses, function ($phoneAddress) {
-            if (!Str::length($phoneAddress) == 12) {
-                throw new ValidationException('This phone number: ' . $phoneAddress . ' is wrongly formatted');
+            if (! Str::length($phoneAddress) === 12) {
+                throw new InvalidPhoneAddress('This phone number: '.$phoneAddress.' is wrongly formatted');
             }
         });
 
