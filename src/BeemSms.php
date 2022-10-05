@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Emanate\BeemSms;
 
+use Emanate\BeemSms\Classes\Validator;
 use Emanate\BeemSms\Exceptions\InvalidBeemApiKeyException;
 use Emanate\BeemSms\Exceptions\InvalidBeemSecretKeyException;
 use Emanate\BeemSms\Exceptions\InvalidBeemSenderNameException;
 use Error;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
@@ -116,6 +118,7 @@ class BeemSms
      * @param mixed $collection
      * @param string $column
      * @return BeemSms
+     * @throws Exception
      */
     public function loadRecipients(mixed $collection, string $column = 'phone_number'): static
     {
@@ -127,11 +130,20 @@ class BeemSms
     /**
      * @param array $recipients
      * @return $this
+     * @throws Exception
      */
     public function getRecipients(array $recipients = []): static
     {
+        if (empty($recipients)) {
+            throw new Exception('Recipients should not be empty');
+        }
+
         if (!is_array($recipients)) {
             throw new Error('Recipients should be an array.');
+        }
+
+        if (config('beem.validate_phone_addresses')) {
+            app(Validator::class)->validate($recipients);
         }
 
         $recipient = [];

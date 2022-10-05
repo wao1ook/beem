@@ -3,6 +3,7 @@
 namespace Emanate\BeemSms\Classes;
 
 use Emanate\BeemSms\Exceptions\ValidationException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class Validator
@@ -34,26 +35,24 @@ class Validator
     }
 
     /**
-     * @param mixed $phoneAddresses
+     * @param array $phoneAddresses
      * @return bool
-     * @throws ValidationException
      */
-    public function validate(mixed $phoneAddresses): bool
+    public function validate(array $phoneAddresses): bool
     {
         return $this->validatePhoneAddressPrefix($phoneAddresses)
             && $this->validatePhoneAddressLength($phoneAddresses);
     }
 
     /**
-     * @param mixed $phoneAddresses
+     * @param array $phoneAddresses
      * @return bool
-     * @throws ValidationException
      */
-    protected function validatePhoneAddressPrefix(mixed $phoneAddresses): bool
+    protected function validatePhoneAddressPrefix(array $phoneAddresses): bool
     {
-        $phoneAddresses->each(function ($phoneAddress) {
-            if (! Str::startsWith($phoneAddress, static::getPhoneAddressPrefix())) {
-                throw new ValidationException('This phone number: ' . $phoneAddress . 'is wrongly formatted');
+        Arr::map($phoneAddresses, function ($phoneAddress) {
+            if (!Str::startsWith($phoneAddress, static::getPhoneAddressPrefix())) {
+                throw new ValidationException('This phone number: ' . $phoneAddress . ' is wrongly formatted');
             }
         });
 
@@ -61,15 +60,14 @@ class Validator
     }
 
     /**
-     * @param mixed $phoneAddresses
+     * @param array $phoneAddresses
      * @return bool
-     * @throws ValidationException
      */
-    protected function validatePhoneAddressLength(mixed $phoneAddresses): bool
+    protected function validatePhoneAddressLength(array $phoneAddresses): bool
     {
-        $phoneAddresses->each(function ($phoneAddress) {
-            if (! Str::length($phoneAddress) == 12) {
-                throw new ValidationException('This phone number: ' . $phoneAddress . 'is wrongly formatted');
+        Arr::map($phoneAddresses, function ($phoneAddress) {
+            if (!Str::length($phoneAddress) == 12) {
+                throw new ValidationException('This phone number: ' . $phoneAddress . ' is wrongly formatted');
             }
         });
 
