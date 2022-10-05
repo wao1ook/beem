@@ -68,7 +68,7 @@ final class BeemSms
      * @param  string  $apiKey
      * @return $this
      */
-    public function apiKey(string $apiKey = ''): static
+    public function apiKey(string $apiKey = ''): BeemSms
     {
         $this->apiKey = $apiKey;
 
@@ -79,7 +79,7 @@ final class BeemSms
      * @param  string  $secretKey
      * @return $this
      */
-    public function secretKey(string $secretKey = ''): static
+    public function secretKey(string $secretKey = ''): BeemSms
     {
         $this->secretKey = $secretKey;
 
@@ -121,9 +121,9 @@ final class BeemSms
      *
      * @throws Exception
      */
-    public function loadRecipients(mixed $collection, string $column = 'phone_number'): static
+    public function loadRecipients(mixed $collection, string $column = 'phone_number'): BeemSms
     {
-        $recipients = $collection->map(fn ($item) => $item[$column])->toArray();
+        $recipients = $collection->transform(fn ($item) => $item[$column])->toArray();
 
         return $this->getRecipients($recipients);
     }
@@ -134,9 +134,9 @@ final class BeemSms
      *
      * @throws Exception
      */
-    public function getRecipients(array $recipients): static
+    public function getRecipients(array $recipients): BeemSms
     {
-        if (count($recipients)) {
+        if (count($recipients) === 0) {
             throw new Exception('Recipients should not be empty');
         }
 
@@ -186,7 +186,7 @@ final class BeemSms
      * @param  string  $message
      * @return $this
      */
-    public function content(string $message = ''): static
+    public function content(string $message = ''): BeemSms
     {
         $this->message = $message;
 
