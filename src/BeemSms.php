@@ -125,51 +125,31 @@ class BeemSms
     }
 
     /**
-     * @param mixed $recipients
+     * @param array $recipients
      * @return $this
      */
-    public function getRecipients(mixed $recipients = []): static
+    public function getRecipients(array $recipients = []): static
     {
-        if (!is_iterable($recipients)) {
-            throw new Error('Recipients should be iterable, i.e array or collection.');
+        if (!is_array($recipients)) {
+            throw new Error('Recipients should be an array.');
         }
 
-        if (is_array($recipients)) {
-            $recipients = collect($recipients);
+        $recipient = [];
+
+        foreach ($recipients as $eachRecipient) {
+            $recipient[] = array_fill_keys(['dest_addr'], $eachRecipient);
         }
 
-        $this->recipientAddress = $recipients->pipeThrough([
-            function ($recipients) {
-                return $recipients->map(function ($recipient) {
-                    return array_fill_keys(['dest_addr'], $recipient);
-                });
-            },
-            function ($recipients) {
-                return $recipients->map(function ($recipient) {
-                    return array_merge(
-                        ['recipient_id' => rand(00000000, 999999999)],
-                        $recipient
-                    );
-                });
-            }
-        ]);
+        $recipientAddress = [];
 
-//        $recipient = [];
-//
-//        foreach ($recipients as $eachRecipient) {
-//            $recipient[] = array_fill_keys(['dest_addr'], $eachRecipient);
-//        }
-//
-//        $recipientAddress = [];
-//
-//        foreach ($recipient as $singleRecipient) {
-//            $recipientAddress[] = array_merge(
-//                ['recipient_id' => rand(00000000, 999999999)],
-//                $singleRecipient
-//            );
-//        }
-//
-//        $this->recipientAddress = $recipientAddress;
+        foreach ($recipient as $singleRecipient) {
+            $recipientAddress[] = array_merge(
+                ['recipient_id' => rand(00000000, 999999999)],
+                $singleRecipient
+            );
+        }
+
+        $this->recipientAddress = $recipientAddress;
 
         return $this;
     }
