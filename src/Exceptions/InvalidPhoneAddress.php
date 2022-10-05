@@ -9,6 +9,6 @@ use Exception;
 /**
  * Will be used to throw an exception if a validation fails.
  */
-class InvalidPhoneAddress extends Exception
+final class InvalidPhoneAddress extends Exception
 {
 }

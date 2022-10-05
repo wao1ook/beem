@@ -7,7 +7,7 @@ namespace Emanate\BeemSms\Exceptions;
 use Exception;
 use Illuminate\Http\Response;
 
-class InvalidBeemSenderName extends Exception
+final class InvalidBeemSenderName extends Exception
 {
     /**
      * Report the exception

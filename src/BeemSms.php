@@ -13,7 +13,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
 
-class BeemSms
+final class BeemSms
 {
     /**
      * API Key
@@ -77,7 +77,7 @@ class BeemSms
 
     /**
      * @param  string  $secretKey
-     * @return BeemSms
+     * @return $this
      */
     public function secretKey(string $secretKey = ''): static
     {
@@ -117,7 +117,7 @@ class BeemSms
     /**
      * @param  mixed  $collection
      * @param  string  $column
-     * @return BeemSms
+     * @return $this
      *
      * @throws Exception
      */
@@ -140,10 +140,30 @@ class BeemSms
             throw new Exception('Recipients should not be empty');
         }
 
+        $this->validateRecipientAddresses($recipients);
+
+        $this->recipientAddress = $this->formatRecipientAddress($recipients);
+
+        return $this;
+    }
+
+    /**
+     * @param  array  $recipients
+     * @return void
+     */
+    protected function validateRecipientAddresses(array $recipients): void
+    {
         if (config('beem.validate_phone_addresses')) {
             app(Validator::class)->validate($recipients);
         }
+    }
 
+    /**
+     * @param  array  $recipients
+     * @return array
+     */
+    protected function formatRecipientAddress(array $recipients): array
+    {
         $recipient = [];
 
         foreach ($recipients as $eachRecipient) {
@@ -159,9 +179,7 @@ class BeemSms
             );
         }
 
-        $this->recipientAddress = $recipientAddress;
-
-        return $this;
+        return $recipientAddress;
     }
 
     /**

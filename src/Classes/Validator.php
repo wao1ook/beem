@@ -8,7 +8,7 @@ use Emanate\BeemSms\Exceptions\InvalidPhoneAddress;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-class Validator
+final class Validator
 {
     /**
      * List of phone address prefixes.
@@ -68,7 +68,7 @@ class Validator
     protected function validatePhoneAddressLength(array $phoneAddresses): bool
     {
         Arr::map($phoneAddresses, function ($phoneAddress) {
-            if (! Str::length($phoneAddress) === 12) {
+            if (! (Str::length($phoneAddress) === 12)) {
                 throw new InvalidPhoneAddress('This phone number: '.$phoneAddress.' is wrongly formatted');
             }
         });

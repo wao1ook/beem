@@ -6,7 +6,7 @@ namespace Emanate\BeemSms\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class BeemSms extends Facade
+final class BeemSms extends Facade
 {
     /**
      * Get the registered name of the component.
