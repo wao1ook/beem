@@ -13,7 +13,7 @@ final class Validator
     /**
      * List of phone address prefixes.
      *
-     * @var array
+     * @var array<string>
      */
     protected static array $phoneAddressPrefix = [
         '25562',
@@ -29,16 +29,8 @@ final class Validator
     ];
 
     /**
-     * @return array
-     */
-    protected static function getPhoneAddressPrefix(): array
-    {
-        return static::$phoneAddressPrefix;
-    }
-
-    /**
-     * @param  array  $phoneAddresses
-     * @return bool
+     * @param  array<string>  $phoneAddresses
+     *
      */
     public function validate(array $phoneAddresses): bool
     {
@@ -47,13 +39,22 @@ final class Validator
     }
 
     /**
-     * @param  array  $phoneAddresses
-     * @return bool
+     * @return array<string>
+     *
+     */
+    protected static function getPhoneAddressPrefix(): array
+    {
+        return Validator::$phoneAddressPrefix;
+    }
+
+    /**
+     * @param  array<string>  $phoneAddresses
+     *
      */
     protected function validatePhoneAddressPrefix(array $phoneAddresses): bool
     {
-        Arr::map($phoneAddresses, function ($phoneAddress) {
-            if (! Str::startsWith($phoneAddress, static::getPhoneAddressPrefix())) {
+        Arr::map($phoneAddresses, function ($phoneAddress): void {
+            if (! Str::startsWith($phoneAddress, Validator::getPhoneAddressPrefix())) {
                 throw new InvalidPhoneAddress('This phone number: '.$phoneAddress.' is wrongly formatted');
             }
         });
@@ -62,12 +63,12 @@ final class Validator
     }
 
     /**
-     * @param  array  $phoneAddresses
-     * @return bool
+     * @param  array<string>  $phoneAddresses
+     *
      */
     protected function validatePhoneAddressLength(array $phoneAddresses): bool
     {
-        Arr::map($phoneAddresses, function ($phoneAddress) {
+        Arr::map($phoneAddresses, function ($phoneAddress): void {
             if (! (Str::length($phoneAddress) === 12)) {
                 throw new InvalidPhoneAddress('This phone number: '.$phoneAddress.' is wrongly formatted');
             }

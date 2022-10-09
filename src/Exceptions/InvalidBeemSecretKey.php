@@ -12,7 +12,6 @@ final class InvalidBeemSecretKey extends Exception
     /**
      * Report the exception
      *
-     * @return bool
      */
     public function report(): bool
     {
@@ -22,7 +21,6 @@ final class InvalidBeemSecretKey extends Exception
     /**
      * Render the exception into an HTTP response.
      *
-     * @return Response
      */
     public function render(): Response
     {

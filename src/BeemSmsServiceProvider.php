@@ -7,12 +7,11 @@ namespace Emanate\BeemSms;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
-class BeemSmsServiceProvider extends ServiceProvider implements DeferrableProvider
+final class BeemSmsServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Register any application services.
      *
-     * @return void
      */
     public function register(): void
     {
@@ -26,7 +25,6 @@ class BeemSmsServiceProvider extends ServiceProvider implements DeferrableProvid
     /**
      * Bootstrap any application services.
      *
-     * @return void
      */
     public function boot(): void
     {
@@ -40,7 +38,7 @@ class BeemSmsServiceProvider extends ServiceProvider implements DeferrableProvid
     /**
      * Get the services provided by the provider.
      *
-     * @return array
+     * @return array<string>
      */
     public function provides(): array
     {
