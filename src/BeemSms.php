@@ -158,6 +158,22 @@ final class BeemSms
     }
 
     /**
+     * @throws Exception
+     */
+    public function unpackRecipients(...$recipients): BeemSms
+    {
+        if (count($recipients) === 0) {
+            throw new Exception('Recipients should not be empty');
+        }
+
+        $this->validateRecipientAddresses($recipients);
+
+        $this->recipientAddress = $this->formatRecipientAddress($recipients);
+
+        return $this;
+    }
+
+    /**
      * @param  array<string>  $recipients
      *
      */
