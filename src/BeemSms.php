@@ -132,7 +132,11 @@ class BeemSms
         $recipient = [];
 
         foreach ($recipients as $eachRecipient) {
-            $recipient[] = array_fill_keys(['dest_addr'], $eachRecipient);
+            if (str_starts_with($eachRecipient, '0')) {
+                $recipient[] = array_fill_keys(['dest_addr'], substr_replace($eachRecipient, '+255', 0, 1));
+            } else {
+                $recipient[] = array_fill_keys(['dest_addr'], $eachRecipient);
+            }
         }
 
         $recipientAddress = [];
