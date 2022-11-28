@@ -64,6 +64,16 @@ use Emanate\BeemSms\Facades\BeemSms;
 BeemSms::content('Your message here')->getRecipients(array('255700000000', '255711111111', '255722222222'))->send();
 ```
 
+Sometimes, casting a number of recipient addresses to array, so you could just pass them through the `getRecipients` method might be an overkill. Well, you could use the `unpackRecipients` method.
+
+```php
+use Emanate\BeemSms\Facades\BeemSms;
+
+
+BeemSms::content('Your message here')->unpackRecipients('255700000000', '255711111111', '255722222222')->send();
+
+```
+
 You can use custom credentials ( API and Secret Key) on runtime, whenever it suits your needs. Using these methods do not recuse you from the responsibility of adding your credentials to wherever you store your secret environment variables. Please make sure you have your keys registered in the config before you start using the package.
 
 ```php
