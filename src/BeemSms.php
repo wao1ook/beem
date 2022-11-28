@@ -108,9 +108,7 @@ final class BeemSms
      */
     public function send(): ResponseInterface
     {
-        $client = new Client();
-
-        return $client->post(
+        return (new Client())->post(
             $this->url,
             [
                 'verify' => false,
@@ -194,14 +192,18 @@ final class BeemSms
         $recipient = [];
 
         foreach ($recipients as $eachRecipient) {
-            $recipient[] = array_fill_keys(['dest_addr'], $eachRecipient);
+            if (str_starts_with($eachRecipient, '0')) {
+                $recipient[] = array_fill_keys(['dest_addr'], substr_replace($eachRecipient, '+255', 0, 1));
+            } else {
+                $recipient[] = array_fill_keys(['dest_addr'], $eachRecipient);
+            }
         }
 
         $recipientAddress = [];
 
         foreach ($recipient as $singleRecipient) {
             $recipientAddress[] = array_merge(
-                ['recipient_id' => rand(00000000, 999999999)],
+                ['recipient_id' => random_int(00000000, 999999999)],
                 $singleRecipient
             );
         }
