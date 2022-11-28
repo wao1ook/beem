@@ -70,7 +70,7 @@ final class Validator
     {
         $this->phoneAddresses = Arr::map($this->phoneAddresses, static function ($phoneAddress) {
             if (Str::startsWith($phoneAddress, ['07', '06'])) {
-                return Str::replace('0', '255', $phoneAddress);
+                return Str::replaceFirst('0', '255', $phoneAddress);
             }
 
             if (Str::startsWith($phoneAddress, '+')) {
