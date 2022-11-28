@@ -7,6 +7,7 @@ namespace Emanate\BeemSms;
 use Emanate\BeemSms\Exceptions\InvalidBeemApiKeyException;
 use Emanate\BeemSms\Exceptions\InvalidBeemSecretKeyException;
 use Emanate\BeemSms\Exceptions\InvalidBeemSenderNameException;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
@@ -51,9 +52,17 @@ class BeemSms
      */
     public function __construct()
     {
-        if (config('beem.api_key') === null || config('beem.api_key') === '') throw new InvalidBeemApiKeyException;
-        if (config('beem.secret_key') === null || config('beem.secret_key') === '') throw new InvalidBeemSecretKeyException();
-        if (config('beem.sender_name') === null || config('beem.sender_name') === '') throw new InvalidBeemSenderNameException();
+        if (config('beem.api_key') === null || config('beem.api_key') === '') {
+            throw new InvalidBeemApiKeyException;
+        }
+
+        if (config('beem.secret_key') === null || config('beem.secret_key') === '') {
+            throw new InvalidBeemSecretKeyException();
+        }
+
+        if (config('beem.sender_name') === null || config('beem.sender_name') === '') {
+            throw new InvalidBeemSenderNameException();
+        }
 
         $this->apiKey = config('beem.api_key');
         $this->secretKey = config('beem.secret_key');
@@ -90,9 +99,7 @@ class BeemSms
      */
     public function send(): ResponseInterface
     {
-        $client = new Client();
-
-        return $client->post(
+        return (new Client())->post(
             $this->url,
             [
                 'verify' => false,
@@ -115,6 +122,7 @@ class BeemSms
      * @param mixed $collection
      * @param string $column
      * @return BeemSms
+     * @throws Exception
      */
     public function loadRecipients(mixed $collection, string $column = 'phone_number'): static
     {
@@ -126,6 +134,7 @@ class BeemSms
     /**
      * @param array $recipients
      * @return $this
+     * @throws Exception
      */
     public function getRecipients(array $recipients = []): static
     {
@@ -143,7 +152,7 @@ class BeemSms
 
         foreach ($recipient as $singleRecipient) {
             $recipientAddress[] = array_merge(
-                ['recipient_id' => rand(00000000, 999999999)],
+                ['recipient_id' => random_int(00000000, 999999999)],
                 $singleRecipient
             );
         }
