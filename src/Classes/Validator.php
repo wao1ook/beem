@@ -25,55 +25,107 @@ final class Validator
         '25574',
         '25575',
         '25576',
+        '25577',
         '25578',
     ];
 
-    /**
-     * @param  array<string>  $phoneAddresses
-     *
-     */
-    public function validate(array $phoneAddresses): bool
+    public function __construct(
+        private array $phoneAddresses
+    )
     {
-        return $this->validatePhoneAddressPrefix($phoneAddresses)
-            && $this->validatePhoneAddressLength($phoneAddresses);
+    }
+
+    public static function make(array $phoneAddresses): Validator
+    {
+        return new self($phoneAddresses);
+    }
+
+    /**
+     * @return array
+     * @throws InvalidPhoneAddress
+     */
+    public function validate(): array
+    {
+        $this->fixIfPhoneAddressStartsWithZeroOrPlus();
+
+        $this->validatePhoneAddressPrefix();
+
+        $this->validatePhoneAddressLength();
+
+        return $this->phoneAddresses;
     }
 
     /**
      * @return array<string>
-     *
      */
     protected static function getPhoneAddressPrefix(): array
     {
-        return Validator::$phoneAddressPrefix;
+        return self::$phoneAddressPrefix;
     }
 
     /**
-     * @param  array<string>  $phoneAddresses
-     *
+     * @return Validator
      */
-    protected function validatePhoneAddressPrefix(array $phoneAddresses): bool
+    protected function fixIfPhoneAddressStartsWithZeroOrPlus(): Validator
     {
-        Arr::map($phoneAddresses, function ($phoneAddress): void {
-            if (! Str::startsWith($phoneAddress, Validator::getPhoneAddressPrefix())) {
-                throw new InvalidPhoneAddress('This phone number: '.$phoneAddress.' is wrongly formatted');
+        $this->phoneAddresses = Arr::map($this->phoneAddresses, static function ($phoneAddress) {
+            if (Str::startsWith($phoneAddress, ['07', '06'])) {
+                return Str::replace('0', '255', $phoneAddress);
             }
+
+            if (Str::startsWith($phoneAddress, '+')) {
+                return Str::remove('+', $phoneAddress);
+            }
+
+            return $phoneAddress;
         });
 
-        return true;
+        return $this;
     }
 
     /**
-     * @param  array<string>  $phoneAddresses
-     *
+     * @return void
+     * @throws InvalidPhoneAddress
      */
-    protected function validatePhoneAddressLength(array $phoneAddresses): bool
+    protected function validatePhoneAddressPrefix(): void
     {
-        Arr::map($phoneAddresses, function ($phoneAddress): void {
-            if (! (Str::length($phoneAddress) === 12)) {
-                throw new InvalidPhoneAddress('This phone number: '.$phoneAddress.' is wrongly formatted');
+        $wronglyFormattedPhoneAddresses = array_filter($this->phoneAddresses, static function ($phoneAddress) {
+            if (!Str::startsWith($phoneAddress, self::getPhoneAddressPrefix())) {
+                return $phoneAddress;
             }
+
+            return null;
         });
 
-        return true;
+        if (empty($wronglyFormattedPhoneAddresses)) {
+            return;
+        }
+
+        throw new InvalidPhoneAddress(
+            'Phone ' . Str::plural('address', array_count_values($wronglyFormattedPhoneAddresses)) . ': ' . implode(', ', $wronglyFormattedPhoneAddresses) . ' wrongly formatted'
+        );
+    }
+
+    /**
+     * @return void
+     * @throws InvalidPhoneAddress
+     */
+    protected function validatePhoneAddressLength(): void
+    {
+        $wronglyFormattedPhoneAddresses = array_filter($this->phoneAddresses, static function ($phoneAddress) {
+            if (!(Str::length($phoneAddress) === 12)) {
+                return $phoneAddress;
+            }
+
+            return null;
+        });
+
+        if (empty($wronglyFormattedPhoneAddresses)) {
+            return;
+        }
+
+        throw new InvalidPhoneAddress(
+            'Phone ' . Str::plural('address', array_count_values($wronglyFormattedPhoneAddresses)) . ': ' . implode(', ', $wronglyFormattedPhoneAddresses) . ' wrongly formatted'
+        );
     }
 }

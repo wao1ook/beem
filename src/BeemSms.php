@@ -8,10 +8,12 @@ use Emanate\BeemSms\Classes\Validator;
 use Emanate\BeemSms\Exceptions\InvalidBeemApiKey;
 use Emanate\BeemSms\Exceptions\InvalidBeemSecretKey;
 use Emanate\BeemSms\Exceptions\InvalidBeemSenderName;
+use Emanate\BeemSms\Exceptions\InvalidPhoneAddress;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
 
 final class BeemSms
 {
@@ -145,10 +147,10 @@ final class BeemSms
     public function getRecipients(array $recipients): BeemSms
     {
         if (count($recipients) === 0) {
-            throw new Exception('Recipients should not be empty');
+            throw new RuntimeException('Recipients should not be empty');
         }
 
-        $this->validateRecipientAddresses($recipients);
+        $recipients = $this->validateRecipientAddresses($recipients);
 
         $this->recipientAddress = $this->formatRecipientAddress($recipients);
 
@@ -161,10 +163,10 @@ final class BeemSms
     public function unpackRecipients(...$recipients): BeemSms
     {
         if (count($recipients) === 0) {
-            throw new Exception('Recipients should not be empty');
+            throw new RuntimeException('Recipients should not be empty');
         }
 
-        $this->validateRecipientAddresses($recipients);
+        $recipients = $this->validateRecipientAddresses($recipients);
 
         $this->recipientAddress = $this->formatRecipientAddress($recipients);
 
@@ -172,20 +174,24 @@ final class BeemSms
     }
 
     /**
-     * @param  array<string>  $recipients
-     *
+     * @param array<string> $recipients
+     * @throws InvalidPhoneAddress
+     * @return array
      */
-    protected function validateRecipientAddresses(array $recipients): void
+    protected function validateRecipientAddresses(array $recipients): array
     {
         if (config('beem.validate_phone_addresses')) {
-            app(Validator::class)->validate($recipients);
+            return Validator::make($recipients)->validate();
         }
+
+        return $recipients;
     }
 
     /**
-     * @param  array<string>  $recipients
+     * @param array<string> $recipients
      * @return array<string>
      *
+     * @throws Exception
      */
     protected function formatRecipientAddress(array $recipients): array
     {
