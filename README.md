@@ -77,11 +77,17 @@ BeemSms::content('Your message here')
 ->send();
 ```
 
-## Testing
+### Validation
+Sometimes phone addresses are not exactly in the format that works for Beem, then the whole operation of sending messages to recipients fails. This package tries to solve this by placing necessary validation checks and the smallest changes to the recipient addresses whenever necessary to ensure the format is consistent with Beem's expectations. All you have to do is leave the option **`validate_phone_addresses`** in the config to `true`.
 
-```bash
-composer test
-```
+[//]: # (## Testing)
+
+[//]: # ()
+[//]: # (```bash)
+
+[//]: # (composer test)
+
+[//]: # (```)
 
 ## Changelog
 

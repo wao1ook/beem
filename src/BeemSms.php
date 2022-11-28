@@ -134,13 +134,13 @@ final class BeemSms
      */
     public function loadRecipients(mixed $collection, string $column = 'phone_number'): BeemSms
     {
-        $recipients = $collection->map(fn ($item) => $item[$column])->toArray();
+        $recipients = $collection->map(fn($item) => $item[$column])->toArray();
 
         return $this->getRecipients($recipients);
     }
 
     /**
-     * @param  array<string>  $recipients
+     * @param array<string> $recipients
      *
      * @throws Exception
      */
@@ -175,8 +175,8 @@ final class BeemSms
 
     /**
      * @param array<string> $recipients
-     * @throws InvalidPhoneAddress
      * @return array
+     * @throws InvalidPhoneAddress
      */
     protected function validateRecipientAddresses(array $recipients): array
     {
@@ -198,11 +198,7 @@ final class BeemSms
         $recipient = [];
 
         foreach ($recipients as $eachRecipient) {
-            if (str_starts_with($eachRecipient, '0')) {
-                $recipient[] = array_fill_keys(['dest_addr'], substr_replace($eachRecipient, '+255', 0, 1));
-            } else {
-                $recipient[] = array_fill_keys(['dest_addr'], $eachRecipient);
-            }
+            $recipient[] = array_fill_keys(['dest_addr'], $eachRecipient);
         }
 
         $recipientAddress = [];
