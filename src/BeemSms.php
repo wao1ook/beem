@@ -4,64 +4,70 @@ declare(strict_types=1);
 
 namespace Emanate\BeemSms;
 
-use Emanate\BeemSms\Exceptions\InvalidBeemApiKeyException;
-use Emanate\BeemSms\Exceptions\InvalidBeemSecretKeyException;
-use Emanate\BeemSms\Exceptions\InvalidBeemSenderNameException;
+use Emanate\BeemSms\Classes\Validator;
+use Emanate\BeemSms\Exceptions\InvalidBeemApiKey;
+use Emanate\BeemSms\Exceptions\InvalidBeemSecretKey;
+use Emanate\BeemSms\Exceptions\InvalidBeemSenderName;
+use Emanate\BeemSms\Exceptions\InvalidPhoneAddress;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
 
-class BeemSms
+final class BeemSms
 {
     /**
-     * @var string
+     * API Key
      */
     protected string $apiKey;
 
     /**
-     * @var string
+     * API Secret Key
      */
     protected string $secretKey;
 
     /**
-     * @var string
+     * Sender Name registered by Beem
      */
     protected string $senderName;
 
     /**
-     * @var string
+     * The message to be sent.
      */
-    public string $message;
+    protected string $message;
 
     /**
-     * @var string
+     * Beem Sms Base URL
+     *
      */
-    public string $url;
+    protected string $url;
 
     /**
-     * @var array
+     * Array of phone addresses
+     *
+     * @var array<string, string>
+     *
      */
-    public array $recipientAddress;
-
+    protected array $recipientAddress;
 
     /**
-     * @throws InvalidBeemApiKeyException
-     * @throws InvalidBeemSecretKeyException
-     * @throws InvalidBeemSenderNameException
+     * @throws InvalidBeemApiKey
+     * @throws InvalidBeemSecretKey
+     * @throws InvalidBeemSenderName
      */
     public function __construct()
     {
-        if (config('beem.api_key') === null || config('beem.api_key') === '') {
-            throw new InvalidBeemApiKeyException;
+        if ($this->isApiKeyEmpty()) {
+            throw new InvalidBeemApiKey();
         }
 
-        if (config('beem.secret_key') === null || config('beem.secret_key') === '') {
-            throw new InvalidBeemSecretKeyException();
+        if ($this->isSecretKeyEmpty()) {
+            throw new InvalidBeemSecretKey();
         }
 
-        if (config('beem.sender_name') === null || config('beem.sender_name') === '') {
-            throw new InvalidBeemSenderNameException();
+        if ($this->isSenderNameEmpty()) {
+            throw new InvalidBeemSenderName();
         }
 
         $this->apiKey = config('beem.api_key');
@@ -70,22 +76,29 @@ class BeemSms
         $this->url = 'https://apisms.beem.africa/v1/send';
     }
 
-    /**
-     * @param string $apiKey
-     * @return $this
-     */
-    public function apiKey(string $apiKey = ''): static
+    private function isApiKeyEmpty(): bool
+    {
+        return config('beem.api_key') === null || config('beem.api_key') === '';
+    }
+
+    private function isSecretKeyEmpty(): bool
+    {
+        return config('beem.secret_key') === null || config('beem.secret_key') === '';
+    }
+
+    private function isSenderNameEmpty(): bool
+    {
+        return config('beem.sender_name') === null || config('beem.sender_name') === '';
+    }
+
+    public function apiKey(string $apiKey = ''): BeemSms
     {
         $this->apiKey = $apiKey;
 
         return $this;
     }
 
-    /**
-     * @param string $secretKey
-     * @return BeemSms
-     */
-    public function secretKey(string $secretKey = ''): static
+    public function secretKey(string $secretKey = ''): BeemSms
     {
         $this->secretKey = $secretKey;
 
@@ -93,8 +106,6 @@ class BeemSms
     }
 
     /**
-     * @return ResponseInterface
-     *
      * @throws GuzzleException
      */
     public function send(): ResponseInterface
@@ -119,12 +130,9 @@ class BeemSms
     }
 
     /**
-     * @param mixed $collection
-     * @param string $column
-     * @return BeemSms
      * @throws Exception
      */
-    public function loadRecipients(mixed $collection, string $column = 'phone_number'): static
+    public function loadRecipients(mixed $collection, string $column = 'phone_number'): BeemSms
     {
         $recipients = $collection->map(fn($item) => $item[$column])->toArray();
 
@@ -132,20 +140,65 @@ class BeemSms
     }
 
     /**
-     * @param array $recipients
-     * @return $this
+     * @param array<string> $recipients
+     *
      * @throws Exception
      */
-    public function getRecipients(array $recipients = []): static
+    public function getRecipients(array $recipients): BeemSms
+    {
+        if (count($recipients) === 0) {
+            throw new RuntimeException('Recipients should not be empty');
+        }
+
+        $recipients = $this->validateRecipientAddresses($recipients);
+
+        $this->recipientAddress = $this->formatRecipientAddress($recipients);
+
+        return $this;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function unpackRecipients(...$recipients): BeemSms
+    {
+        if (count($recipients) === 0) {
+            throw new RuntimeException('Recipients should not be empty');
+        }
+
+        $recipients = $this->validateRecipientAddresses($recipients);
+
+        $this->recipientAddress = $this->formatRecipientAddress($recipients);
+
+        return $this;
+    }
+
+    /**
+     * @param array<string> $recipients
+     * @return array
+     * @throws InvalidPhoneAddress
+     */
+    protected function validateRecipientAddresses(array $recipients): array
+    {
+        if (config('beem.validate_phone_addresses')) {
+            return Validator::make($recipients)->validate();
+        }
+
+        return $recipients;
+    }
+
+    /**
+     * @param array<string> $recipients
+     * @return array<string>
+     *
+     * @throws Exception
+     */
+    protected function formatRecipientAddress(array $recipients): array
     {
         $recipient = [];
 
         foreach ($recipients as $eachRecipient) {
-            if (str_starts_with($eachRecipient, '0')) {
-                $recipient[] = array_fill_keys(['dest_addr'], substr_replace($eachRecipient, '+255', 0, 1));
-            } else {
-                $recipient[] = array_fill_keys(['dest_addr'], $eachRecipient);
-            }
+            $recipient[] = array_fill_keys(['dest_addr'], $eachRecipient);
         }
 
         $recipientAddress = [];
@@ -157,22 +210,13 @@ class BeemSms
             );
         }
 
-        $this->recipientAddress = $recipientAddress;
-
-        return $this;
+        return $recipientAddress;
     }
 
-    /**
-     * @param string $message
-     * @return $this
-     */
-    public function content(string $message = ''): static
+    public function content(string $message = ''): BeemSms
     {
         $this->message = $message;
 
         return $this;
     }
 }
-
-
-

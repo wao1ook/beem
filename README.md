@@ -64,6 +64,16 @@ use Emanate\BeemSms\Facades\BeemSms;
 BeemSms::content('Your message here')->getRecipients(array('255700000000', '255711111111', '255722222222'))->send();
 ```
 
+Sometimes, casting a number of recipient addresses to array, so you could just pass them through the `getRecipients` method might be an overkill. Well, you could use the `unpackRecipients` method.
+
+```php
+use Emanate\BeemSms\Facades\BeemSms;
+
+
+BeemSms::content('Your message here')->unpackRecipients('255700000000', '255711111111', '255722222222')->send();
+
+```
+
 You can use custom credentials ( API and Secret Key) on runtime, whenever it suits your needs. Using these methods do not recuse you from the responsibility of adding your credentials to wherever you store your secret environment variables. Please make sure you have your keys registered in the config before you start using the package.
 
 ```php
@@ -77,11 +87,17 @@ BeemSms::content('Your message here')
 ->send();
 ```
 
-## Testing
+### Validation
+Sometimes phone addresses are not exactly in the format that works for Beem, then the whole operation of sending messages to recipients fails. This package tries to solve this by placing necessary validation checks and the smallest changes to the recipient addresses whenever necessary to ensure the format is consistent with Beem's expectations. All you have to do is leave the option **`validate_phone_addresses`** in the config to `true`.
 
-```bash
-composer test
-```
+[//]: # (## Testing)
+
+[//]: # ()
+[//]: # (```bash)
+
+[//]: # (composer test)
+
+[//]: # (```)
 
 ## Changelog
 

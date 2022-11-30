@@ -1,36 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Emanate\BeemSms;
 
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
-class BeemSmsServiceProvider extends ServiceProvider implements DeferrableProvider
+final class BeemSmsServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Register any application services.
      *
-     * @return void
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/beem.php', 'beem');
+        $this->mergeConfigFrom(__DIR__.'/../config/beem.php', 'beem');
 
-        $this->app->bind('beem-sms', function ($app) {
-            return new BeemSms;
+        $this->app->bind('beem-sms', function () {
+            return new BeemSms();
         });
     }
 
     /**
      * Bootstrap any application services.
      *
-     * @return void
      */
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/beem.php' => $this->app->configPath('beem.php'),
+                __DIR__.'/../config/beem.php' => $this->app->configPath('beem.php'),
             ], 'beem');
         }
     }
@@ -38,13 +38,13 @@ class BeemSmsServiceProvider extends ServiceProvider implements DeferrableProvid
     /**
      * Get the services provided by the provider.
      *
-     * @return array
+     * @return array<string>
      */
     public function provides(): array
     {
         return [
             BeemSms::class,
-            'beem-sms'
+            'beem-sms',
         ];
     }
 }

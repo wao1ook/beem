@@ -1,23 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Emanate\BeemSms\Exceptions;
 
 use Exception;
+use Illuminate\Http\Response;
 
-class InvalidBeemSenderNameException extends Exception
+final class InvalidBeemSenderName extends Exception
 {
     /**
      * Report the exception
      *
-     * @return bool
      */
     public function report(): bool
     {
         return true;
     }
 
-
-    public function render()
+    /**
+     * Render the exception into an HTTP response.
+     *
+     */
+    public function render(): Response
     {
         return response('Your Sender Name is wrongly set or missing.', 417);
     }

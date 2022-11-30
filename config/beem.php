@@ -8,4 +8,6 @@ return [
     'sender_name' => env('BEEM_SMS_SENDER_NAME', 'INFO'),
 
     'debug' => true,
+
+    'validate_phone_addresses' => true,
 ];

@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Emanate\BeemSms\Exceptions;
 
 use Exception;
 use Illuminate\Http\Response;
 
-class InvalidBeemSecretKeyException extends Exception
+final class InvalidBeemSecretKey extends Exception
 {
     /**
      * Report the exception
      *
-     * @return bool
      */
     public function report(): bool
     {
@@ -20,7 +21,6 @@ class InvalidBeemSecretKeyException extends Exception
     /**
      * Render the exception into an HTTP response.
      *
-     * @return Response
      */
     public function render(): Response
     {
