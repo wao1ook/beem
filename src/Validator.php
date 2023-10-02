@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Emanate\BeemSms\Classes;
+namespace Emanate\BeemSms;
 
+use Emanate\BeemSms\Contracts\Validator as ValidatorContract;
 use Emanate\BeemSms\Exceptions\InvalidPhoneAddress;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-final class Validator
+final class Validator implements ValidatorContract
 {
     /**
      * List of phone address prefixes.
@@ -29,12 +30,12 @@ final class Validator
         '25578',
     ];
 
-    public function __construct(
+    private function __construct(
         private array $phoneAddresses
     ) {
     }
 
-    public static function make(array $phoneAddresses): Validator
+    public function make(array $phoneAddresses): Validator
     {
         return new self($phoneAddresses);
     }

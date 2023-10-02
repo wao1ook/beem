@@ -32,7 +32,7 @@
     },
     "autoload": {
         "files": [
-            "src/Support/helpers.php"
+            "src/helpers.php"
         ],
         "psr-4": {
             "Emanate\\BeemSms\\": "src"

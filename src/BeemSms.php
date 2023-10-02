@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Emanate\BeemSms;
 
-use Emanate\BeemSms\Classes\Validator;
 use Emanate\BeemSms\Exceptions\InvalidBeemApiKey;
 use Emanate\BeemSms\Exceptions\InvalidBeemSecretKey;
 use Emanate\BeemSms\Exceptions\InvalidBeemSenderName;
