@@ -31,8 +31,7 @@ final class Validator
 
     public function __construct(
         private array $phoneAddresses
-    )
-    {
+    ) {
     }
 
     public static function make(array $phoneAddresses): Validator
@@ -41,7 +40,6 @@ final class Validator
     }
 
     /**
-     * @return array
      * @throws InvalidPhoneAddress
      */
     public function validate(): array
@@ -63,9 +61,6 @@ final class Validator
         return self::$phoneAddressPrefix;
     }
 
-    /**
-     * @return Validator
-     */
     protected function fixIfPhoneAddressStartsWithZeroOrPlus(): Validator
     {
         $this->phoneAddresses = Arr::map($this->phoneAddresses, static function ($phoneAddress) {
@@ -84,13 +79,12 @@ final class Validator
     }
 
     /**
-     * @return void
      * @throws InvalidPhoneAddress
      */
     protected function validatePhoneAddressPrefix(): void
     {
         $wronglyFormattedPhoneAddresses = array_filter($this->phoneAddresses, static function ($phoneAddress) {
-            if (!Str::startsWith($phoneAddress, self::getPhoneAddressPrefix())) {
+            if (! Str::startsWith($phoneAddress, self::getPhoneAddressPrefix())) {
                 return $phoneAddress;
             }
 
@@ -102,18 +96,17 @@ final class Validator
         }
 
         throw new InvalidPhoneAddress(
-            'Phone ' . Str::plural('address', array_count_values($wronglyFormattedPhoneAddresses)) . ': ' . implode(', ', $wronglyFormattedPhoneAddresses) . ' wrongly formatted'
+            'Phone '.Str::plural('address', array_count_values($wronglyFormattedPhoneAddresses)).': '.implode(', ', $wronglyFormattedPhoneAddresses).' wrongly formatted'
         );
     }
 
     /**
-     * @return void
      * @throws InvalidPhoneAddress
      */
     protected function validatePhoneAddressLength(): void
     {
         $wronglyFormattedPhoneAddresses = array_filter($this->phoneAddresses, static function ($phoneAddress) {
-            if (!(Str::length($phoneAddress) === 12)) {
+            if (! (Str::length($phoneAddress) === 12)) {
                 return $phoneAddress;
             }
 
@@ -125,7 +118,7 @@ final class Validator
         }
 
         throw new InvalidPhoneAddress(
-            'Phone ' . Str::plural('address', array_count_values($wronglyFormattedPhoneAddresses)) . ': ' . implode(', ', $wronglyFormattedPhoneAddresses) . ' wrongly formatted'
+            'Phone '.Str::plural('address', array_count_values($wronglyFormattedPhoneAddresses)).': '.implode(', ', $wronglyFormattedPhoneAddresses).' wrongly formatted'
         );
     }
 }

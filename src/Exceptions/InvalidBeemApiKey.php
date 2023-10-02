@@ -11,7 +11,6 @@ final class InvalidBeemApiKey extends Exception
 {
     /**
      * Report the exception
-     *
      */
     public function report(): bool
     {
@@ -20,7 +19,6 @@ final class InvalidBeemApiKey extends Exception
 
     /**
      * Render the exception into an HTTP response.
-     *
      */
     public function render(): Response
     {

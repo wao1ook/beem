@@ -39,7 +39,6 @@ final class BeemSms
 
     /**
      * Beem Sms Base URL
-     *
      */
     protected string $url;
 
@@ -47,7 +46,6 @@ final class BeemSms
      * Array of phone addresses
      *
      * @var array<string, string>
-     *
      */
     protected array $recipientAddress;
 
@@ -134,13 +132,13 @@ final class BeemSms
      */
     public function loadRecipients(mixed $collection, string $column = 'phone_number'): BeemSms
     {
-        $recipients = $collection->map(fn($item) => $item[$column])->toArray();
+        $recipients = $collection->map(fn ($item) => $item[$column])->toArray();
 
         return $this->getRecipients($recipients);
     }
 
     /**
-     * @param array<string> $recipients
+     * @param  array<string>  $recipients
      *
      * @throws Exception
      */
@@ -174,8 +172,8 @@ final class BeemSms
     }
 
     /**
-     * @param array<string> $recipients
-     * @return array
+     * @param  array<string>  $recipients
+     *
      * @throws InvalidPhoneAddress
      */
     protected function validateRecipientAddresses(array $recipients): array
@@ -188,7 +186,7 @@ final class BeemSms
     }
 
     /**
-     * @param array<string> $recipients
+     * @param  array<string>  $recipients
      * @return array<string>
      *
      * @throws Exception

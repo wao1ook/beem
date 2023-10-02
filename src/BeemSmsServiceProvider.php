@@ -11,7 +11,6 @@ final class BeemSmsServiceProvider extends ServiceProvider implements Deferrable
 {
     /**
      * Register any application services.
-     *
      */
     public function register(): void
     {
@@ -24,7 +23,6 @@ final class BeemSmsServiceProvider extends ServiceProvider implements Deferrable
 
     /**
      * Bootstrap any application services.
-     *
      */
     public function boot(): void
     {
