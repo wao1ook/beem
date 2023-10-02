@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Emanate\BeemSms;
 
+use Emanate\BeemSms\Contracts\Validator as ValidatorContract;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
@@ -19,6 +20,8 @@ final class BeemSmsServiceProvider extends ServiceProvider implements Deferrable
         $this->app->bind('beem-sms', function () {
             return new BeemSms();
         });
+
+        $this->app->bind(ValidatorContract::class, Validator::class);
     }
 
     /**

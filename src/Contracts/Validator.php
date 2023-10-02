@@ -10,7 +10,7 @@ interface Validator
      * @param  array  $phoneAddresses
      * @return Validator
      */
-    public function make(array $phoneAddresses): Validator;
+    public function new(array $phoneAddresses): Validator;
 
     /**
      * Run the validator's logic against the phone addresses.

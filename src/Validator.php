@@ -35,7 +35,7 @@ final class Validator implements ValidatorContract
     ) {
     }
 
-    public function make(array $phoneAddresses): Validator
+    public function new(array $phoneAddresses): Validator
     {
         return new self($phoneAddresses);
     }
