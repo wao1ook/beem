@@ -8,6 +8,7 @@ use Emanate\BeemSms\Exceptions\InvalidBeemApiKey;
 use Emanate\BeemSms\Exceptions\InvalidBeemSecretKey;
 use Emanate\BeemSms\Exceptions\InvalidBeemSenderName;
 use Emanate\BeemSms\Exceptions\InvalidPhoneAddress;
+use Emanate\BeemSms\Contracts\Validator;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -178,7 +179,9 @@ final class BeemSms
     protected function validateRecipientAddresses(array $recipients): array
     {
         if (config('beem.validate_phone_addresses')) {
-            return app(Validator::class)->new($recipients)->validate();
+            return app(Validator::class)
+                ->new($recipients)
+                ->validate();
         }
 
         return $recipients;

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Emanate\BeemSms;
 
-use Emanate\BeemSms\Contracts\Validator as ValidatorContract;
+use Emanate\BeemSms\Contracts\Validator;
 use Emanate\BeemSms\Exceptions\InvalidPhoneAddress;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-final class Validator implements ValidatorContract
+final class DefaultValidator implements Validator
 {
     /**
      * List of phone address prefixes.
@@ -32,7 +32,7 @@ final class Validator implements ValidatorContract
 
     private array $phoneAddresses;
 
-    public function new(array $phoneAddresses): Validator
+    public function new(array $phoneAddresses): DefaultValidator
     {
         $this->phoneAddresses = $phoneAddresses;
 
@@ -61,7 +61,7 @@ final class Validator implements ValidatorContract
         return self::$phoneAddressPrefix;
     }
 
-    protected function fixIfPhoneAddressStartsWithZeroOrPlus(): Validator
+    protected function fixIfPhoneAddressStartsWithZeroOrPlus(): DefaultValidator
     {
         $this->phoneAddresses = Arr::map($this->phoneAddresses, static function ($phoneAddress) {
             if (Str::startsWith($phoneAddress, ['07', '06'])) {
