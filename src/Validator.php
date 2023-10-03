@@ -30,14 +30,13 @@ final class Validator implements ValidatorContract
         '25578',
     ];
 
-    private function __construct(
-        private array $phoneAddresses
-    ) {
-    }
+    private array $phoneAddresses;
 
     public function new(array $phoneAddresses): Validator
     {
-        return new self($phoneAddresses);
+        $this->phoneAddresses = $phoneAddresses;
+
+        return $this;
     }
 
     /**
