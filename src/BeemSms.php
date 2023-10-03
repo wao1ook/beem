@@ -15,7 +15,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
-final class BeemSms
+class BeemSms
 {
     /**
      * API Key

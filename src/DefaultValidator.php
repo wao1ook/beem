@@ -9,7 +9,7 @@ use Emanate\BeemSms\Exceptions\InvalidPhoneAddress;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-final class DefaultValidator implements Validator
+class DefaultValidator implements Validator
 {
     /**
      * List of phone address prefixes.
