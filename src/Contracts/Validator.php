@@ -1,14 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Emanate\BeemSms\Contracts;
 
 interface Validator
 {
     /**
      * Create a new Validator instance.
-     *
-     * @param  array  $phoneAddresses
-     * @return Validator
      */
     public function new(array $phoneAddresses): Validator;
 

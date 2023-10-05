@@ -15,11 +15,9 @@ final class BeemSmsServiceProvider extends ServiceProvider implements Deferrable
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/beem.php', 'beem');
+        $this->mergeConfigFrom(__DIR__ . '/../config/beem.php', 'beem');
 
-        $this->app->bind('beem-sms', function () {
-            return new BeemSms();
-        });
+        $this->app->bind('beem-sms', fn () => new BeemSms());
 
         $this->app->bindIf(Validator::class, fn () => new DefaultValidator());
     }
@@ -31,7 +29,7 @@ final class BeemSmsServiceProvider extends ServiceProvider implements Deferrable
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/beem.php' => $this->app->configPath('beem.php'),
+                __DIR__ . '/../config/beem.php' => $this->app->configPath('beem.php'),
             ], 'beem');
         }
     }

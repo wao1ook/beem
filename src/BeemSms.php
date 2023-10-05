@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Emanate\BeemSms;
 
+use Emanate\BeemSms\Contracts\Validator;
 use Emanate\BeemSms\Exceptions\InvalidBeemApiKey;
 use Emanate\BeemSms\Exceptions\InvalidBeemSecretKey;
 use Emanate\BeemSms\Exceptions\InvalidBeemSenderName;
 use Emanate\BeemSms\Exceptions\InvalidPhoneAddress;
-use Emanate\BeemSms\Contracts\Validator;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -72,21 +72,6 @@ class BeemSms
         $this->secretKey = config('beem.secret_key');
         $this->senderName = config('beem.sender_name');
         $this->url = 'https://apisms.beem.africa/v1/send';
-    }
-
-    private function isApiKeyEmpty(): bool
-    {
-        return config('beem.api_key') === null || config('beem.api_key') === '';
-    }
-
-    private function isSecretKeyEmpty(): bool
-    {
-        return config('beem.secret_key') === null || config('beem.secret_key') === '';
-    }
-
-    private function isSenderNameEmpty(): bool
-    {
-        return config('beem.sender_name') === null || config('beem.sender_name') === '';
     }
 
     public function apiKey(string $apiKey = ''): BeemSms
@@ -160,13 +145,20 @@ class BeemSms
      */
     public function unpackRecipients(...$recipients): BeemSms
     {
-        if (count($recipients) === 0) {
+        if (0 === count($recipients)) {
             throw new RuntimeException('Recipients should not be empty');
         }
 
         $recipients = $this->validateRecipientAddresses($recipients);
 
         $this->recipientAddress = $this->formatRecipientAddress($recipients);
+
+        return $this;
+    }
+
+    public function content(string $message = ''): BeemSms
+    {
+        $this->message = $message;
 
         return $this;
     }
@@ -213,10 +205,18 @@ class BeemSms
         return $recipientAddress;
     }
 
-    public function content(string $message = ''): BeemSms
+    private function isApiKeyEmpty(): bool
     {
-        $this->message = $message;
+        return config('beem.api_key') === null || config('beem.api_key') === '';
+    }
 
-        return $this;
+    private function isSecretKeyEmpty(): bool
+    {
+        return config('beem.secret_key') === null || config('beem.secret_key') === '';
+    }
+
+    private function isSenderNameEmpty(): bool
+    {
+        return config('beem.sender_name') === null || config('beem.sender_name') === '';
     }
 }
