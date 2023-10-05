@@ -25,10 +25,8 @@
         "laravel/pint": "^1.2",
         "nunomaduro/collision": "^6.1|^7.0",
         "nunomaduro/larastan": "^2.0.1",
-        "nunomaduro/phpinsights": "^2.4",
         "orchestra/testbench": "^7.0",
-        "pestphp/pest": "^1.21",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5|^10.0"
     },
     "autoload": {
         "files": [
@@ -45,14 +43,10 @@
     },
     "scripts": {
         "pint": "vendor/bin/pint",
-        "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage",
+        "test": "vendor/bin/phpunit",
         "analyse-code": "vendor/bin/phpstan analyse",
-        "insights": "vendor/bin/phpinsights",
         "check": [
             "@pint",
-            "@test",
-            "@insights",
             "@analyse-code"
         ]
     },
