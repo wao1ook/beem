@@ -30,8 +30,19 @@ class DefaultValidator implements Validator
         '25578',
     ];
 
+    /**
+     * The phone addresses to be validated.
+     *
+     * @var array<string>
+     */
     private array $phoneAddresses;
 
+    /**
+     * Create a new Validator instance.
+     *
+     * @param  array<string>  $phoneAddresses
+     * @return DefaultValidator
+     */
     public function new(array $phoneAddresses): DefaultValidator
     {
         $this->phoneAddresses = $phoneAddresses;
@@ -106,7 +117,7 @@ class DefaultValidator implements Validator
     protected function validatePhoneAddressLength(): void
     {
         $wronglyFormattedPhoneAddresses = array_filter($this->phoneAddresses, static function ($phoneAddress) {
-            if ( ! (Str::length($phoneAddress === 12))) {
+            if ( ! (Str::length($phoneAddress) === 12)) {
                 return $phoneAddress;
             }
 

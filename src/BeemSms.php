@@ -8,7 +8,6 @@ use Emanate\BeemSms\Contracts\Validator;
 use Emanate\BeemSms\Exceptions\InvalidBeemApiKey;
 use Emanate\BeemSms\Exceptions\InvalidBeemSecretKey;
 use Emanate\BeemSms\Exceptions\InvalidBeemSenderName;
-use Emanate\BeemSms\Exceptions\InvalidPhoneAddress;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -45,7 +44,7 @@ class BeemSms
     /**
      * Array of phone addresses
      *
-     * @var array<string, string>
+     * @var array<int<0, max>, array<string, int<0, 999999999>|string>>
      */
     protected array $recipientAddress;
 
@@ -142,10 +141,12 @@ class BeemSms
 
     /**
      * @throws Exception
+     *
+     * @phpstan-ignore-next-line
      */
     public function unpackRecipients(...$recipients): BeemSms
     {
-        if (0 === count($recipients)) {
+        if (count($recipients) === 0) {
             throw new RuntimeException('Recipients should not be empty');
         }
 
@@ -166,7 +167,7 @@ class BeemSms
     /**
      * @param  array<string>  $recipients
      *
-     * @throws InvalidPhoneAddress
+     * @return array<string>
      */
     protected function validateRecipientAddresses(array $recipients): array
     {
@@ -181,7 +182,7 @@ class BeemSms
 
     /**
      * @param  array<string>  $recipients
-     * @return array<string>
+     * @return array<int<0, max>, array<string, int<0, 999999999>|string>>
      *
      * @throws Exception
      */
