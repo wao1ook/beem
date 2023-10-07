@@ -23,6 +23,7 @@ class DefaultValidator implements Validator
         '25568',
         '25569',
         '25571',
+        '25573',
         '25574',
         '25575',
         '25576',
