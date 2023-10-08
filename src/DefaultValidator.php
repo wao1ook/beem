@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Emanate\BeemSms\Classes;
+namespace Emanate\BeemSms;
 
+use Emanate\BeemSms\Contracts\Validator;
 use Emanate\BeemSms\Exceptions\InvalidPhoneAddress;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-final class Validator
+class DefaultValidator implements Validator
 {
     /**
      * List of phone address prefixes.
@@ -22,6 +23,7 @@ final class Validator
         '25568',
         '25569',
         '25571',
+        '25573',
         '25574',
         '25575',
         '25576',
@@ -29,19 +31,27 @@ final class Validator
         '25578',
     ];
 
-    public function __construct(
-        private array $phoneAddresses
-    )
-    {
-    }
+    /**
+     * The phone addresses to be validated.
+     *
+     * @var array<string>
+     */
+    private array $phoneAddresses;
 
-    public static function make(array $phoneAddresses): Validator
+    /**
+     * Create a new Validator instance.
+     *
+     * @param  array<string>  $phoneAddresses
+     * @return DefaultValidator
+     */
+    public function new(array $phoneAddresses): DefaultValidator
     {
-        return new self($phoneAddresses);
+        $this->phoneAddresses = $phoneAddresses;
+
+        return $this;
     }
 
     /**
-     * @return array
      * @throws InvalidPhoneAddress
      */
     public function validate(): array
@@ -63,10 +73,7 @@ final class Validator
         return self::$phoneAddressPrefix;
     }
 
-    /**
-     * @return Validator
-     */
-    protected function fixIfPhoneAddressStartsWithZeroOrPlus(): Validator
+    protected function fixIfPhoneAddressStartsWithZeroOrPlus(): DefaultValidator
     {
         $this->phoneAddresses = Arr::map($this->phoneAddresses, static function ($phoneAddress) {
             if (Str::startsWith($phoneAddress, ['07', '06'])) {
@@ -84,13 +91,12 @@ final class Validator
     }
 
     /**
-     * @return void
      * @throws InvalidPhoneAddress
      */
     protected function validatePhoneAddressPrefix(): void
     {
         $wronglyFormattedPhoneAddresses = array_filter($this->phoneAddresses, static function ($phoneAddress) {
-            if (!Str::startsWith($phoneAddress, self::getPhoneAddressPrefix())) {
+            if ( ! Str::startsWith($phoneAddress, self::getPhoneAddressPrefix())) {
                 return $phoneAddress;
             }
 
@@ -107,13 +113,12 @@ final class Validator
     }
 
     /**
-     * @return void
      * @throws InvalidPhoneAddress
      */
     protected function validatePhoneAddressLength(): void
     {
         $wronglyFormattedPhoneAddresses = array_filter($this->phoneAddresses, static function ($phoneAddress) {
-            if (!(Str::length($phoneAddress) === 12)) {
+            if ( ! (Str::length($phoneAddress) === 12)) {
                 return $phoneAddress;
             }
 

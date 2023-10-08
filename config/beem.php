@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'api_key' => env('BEEM_SMS_API_KEY', ''),
 

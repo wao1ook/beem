@@ -28,6 +28,10 @@ return [
     'secret_key' => env('BEEM_SMS_SECRET_KEY', ''),
 
     'sender_name' => env('BEEM_SMS_SENDER_NAME', 'INFO'),
+    
+    'debug' => true,
+
+    'validate_phone_addresses' => true,
 ];
 ```
 
@@ -88,16 +92,43 @@ BeemSms::content('Your message here')
 ```
 
 ### Validation
-Sometimes phone addresses are not exactly in the format that works for Beem, then the whole operation of sending messages to recipients fails. This package tries to solve this by placing necessary validation checks and the smallest changes to the recipient addresses whenever necessary to ensure the format is consistent with Beem's expectations. All you have to do is leave the option **`validate_phone_addresses`** in the config to `true`.
+Sometimes phone addresses are not exactly in the format that works for Beem, then the whole operation of sending messages to recipients fails. If you need to validate phone addresses, you need to leave the option **`validate_phone_addresses`** in the config to `true`. This library comes with a default validator that will handle some use-cases. In the occurrence that you need to use your own validator, you can do so by creating a class that implements the `Emanate\BeemSms\Contracts\Validator` interface. Then you can bind your class to the interface in the `AppServiceProvider` class.
 
-[//]: # (## Testing)
+```php
+use Emanate\BeemSms\Contracts\Validator;
 
-[//]: # ()
-[//]: # (```bash)
+class MyCustomValidator implements Validator
+{
+    public function new(array $phoneAddresses) : Validator
+    {
+     // Create a new instance of your custom validator
+    }
 
-[//]: # (composer test)
+    public function validate(): array
+    {
+        // Your validation logic here
+    }
+}
+```
 
-[//]: # (```)
+```php
+use Emanate\BeemSms\Contracts\Validator;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public $bindings = [
+        // ...
+        Validator::class => MyCustomValidator::class,
+    ];
+}
+```
+
+## Testing
+You can run the tests with:
+
+```bash
+composer test
+```
 
 ## Changelog
 

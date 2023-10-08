@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace Emanate\BeemSms;
 
-use Emanate\BeemSms\Classes\Validator;
+use Emanate\BeemSms\Contracts\Validator;
 use Emanate\BeemSms\Exceptions\InvalidBeemApiKey;
 use Emanate\BeemSms\Exceptions\InvalidBeemSecretKey;
 use Emanate\BeemSms\Exceptions\InvalidBeemSenderName;
-use Emanate\BeemSms\Exceptions\InvalidPhoneAddress;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
-final class BeemSms
+class BeemSms
 {
     /**
      * API Key
@@ -39,15 +38,13 @@ final class BeemSms
 
     /**
      * Beem Sms Base URL
-     *
      */
     protected string $url;
 
     /**
      * Array of phone addresses
      *
-     * @var array<string, string>
-     *
+     * @var array<int<0, max>, array<string, int<0, 999999999>|string>>
      */
     protected array $recipientAddress;
 
@@ -74,21 +71,6 @@ final class BeemSms
         $this->secretKey = config('beem.secret_key');
         $this->senderName = config('beem.sender_name');
         $this->url = 'https://apisms.beem.africa/v1/send';
-    }
-
-    private function isApiKeyEmpty(): bool
-    {
-        return config('beem.api_key') === null || config('beem.api_key') === '';
-    }
-
-    private function isSecretKeyEmpty(): bool
-    {
-        return config('beem.secret_key') === null || config('beem.secret_key') === '';
-    }
-
-    private function isSenderNameEmpty(): bool
-    {
-        return config('beem.sender_name') === null || config('beem.sender_name') === '';
     }
 
     public function apiKey(string $apiKey = ''): BeemSms
@@ -134,13 +116,13 @@ final class BeemSms
      */
     public function loadRecipients(mixed $collection, string $column = 'phone_number'): BeemSms
     {
-        $recipients = $collection->map(fn($item) => $item[$column])->toArray();
+        $recipients = $collection->map(fn ($item) => $item[$column])->toArray();
 
         return $this->getRecipients($recipients);
     }
 
     /**
-     * @param array<string> $recipients
+     * @param  array<string>  $recipients
      *
      * @throws Exception
      */
@@ -159,6 +141,8 @@ final class BeemSms
 
     /**
      * @throws Exception
+     *
+     * @phpstan-ignore-next-line
      */
     public function unpackRecipients(...$recipients): BeemSms
     {
@@ -173,23 +157,32 @@ final class BeemSms
         return $this;
     }
 
+    public function content(string $message = ''): BeemSms
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
     /**
-     * @param array<string> $recipients
-     * @return array
-     * @throws InvalidPhoneAddress
+     * @param  array<string>  $recipients
+     *
+     * @return array<string>
      */
     protected function validateRecipientAddresses(array $recipients): array
     {
         if (config('beem.validate_phone_addresses')) {
-            return Validator::make($recipients)->validate();
+            return app(Validator::class)
+                ->new($recipients)
+                ->validate();
         }
 
         return $recipients;
     }
 
     /**
-     * @param array<string> $recipients
-     * @return array<string>
+     * @param  array<string>  $recipients
+     * @return array<int<0, max>, array<string, int<0, 999999999>|string>>
      *
      * @throws Exception
      */
@@ -213,10 +206,18 @@ final class BeemSms
         return $recipientAddress;
     }
 
-    public function content(string $message = ''): BeemSms
+    private function isApiKeyEmpty(): bool
     {
-        $this->message = $message;
+        return config('beem.api_key') === null || config('beem.api_key') === '';
+    }
 
-        return $this;
+    private function isSecretKeyEmpty(): bool
+    {
+        return config('beem.secret_key') === null || config('beem.secret_key') === '';
+    }
+
+    private function isSenderNameEmpty(): bool
+    {
+        return config('beem.sender_name') === null || config('beem.sender_name') === '';
     }
 }
