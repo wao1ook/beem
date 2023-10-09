@@ -63,14 +63,14 @@ class BeemSms
         $this->url = 'https://apisms.beem.africa/v1/send';
     }
 
-    public function apiKey(string $apiKey = ''): BeemSms
+    public function apiKey(string $apiKey): BeemSms
     {
         $this->apiKey = $apiKey;
 
         return $this;
     }
 
-    public function secretKey(string $secretKey = ''): BeemSms
+    public function secretKey(string $secretKey): BeemSms
     {
         $this->secretKey = $secretKey;
 
@@ -147,7 +147,7 @@ class BeemSms
         return $this;
     }
 
-    public function content(string $message = ''): BeemSms
+    public function content(string $message): BeemSms
     {
         $this->message = $message;
 
