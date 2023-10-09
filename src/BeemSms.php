@@ -55,17 +55,7 @@ class BeemSms
      */
     public function __construct()
     {
-        if ($this->isApiKeyEmpty()) {
-            throw new InvalidBeemApiKey();
-        }
-
-        if ($this->isSecretKeyEmpty()) {
-            throw new InvalidBeemSecretKey();
-        }
-
-        if ($this->isSenderNameEmpty()) {
-            throw new InvalidBeemSenderName();
-        }
+        $this->checkForInvalidCredentials();
 
         $this->apiKey = config('beem.api_key');
         $this->secretKey = config('beem.secret_key');
@@ -206,18 +196,19 @@ class BeemSms
         return $recipientAddress;
     }
 
-    private function isApiKeyEmpty(): bool
+    /**
+     * @return void
+     * @throws InvalidBeemApiKey
+     * @throws InvalidBeemSecretKey
+     * @throws InvalidBeemSenderName
+     */
+    private function checkForInvalidCredentials(): void
     {
-        return config('beem.api_key') === null || config('beem.api_key') === '';
-    }
-
-    private function isSecretKeyEmpty(): bool
-    {
-        return config('beem.secret_key') === null || config('beem.secret_key') === '';
-    }
-
-    private function isSenderNameEmpty(): bool
-    {
-        return config('beem.sender_name') === null || config('beem.sender_name') === '';
+        match (true) {
+            config('beem.api_key') === null || config('beem.api_key') === '' => throw new InvalidBeemApiKey(),
+            config('beem.secret_key') === null || config('beem.secret_key') === '' => throw new InvalidBeemSecretKey(),
+            config('beem.sender_name') === null || config('beem.sender_name') === '' => throw new InvalidBeemSenderName(),
+            default => $this,
+        };
     }
 }
