@@ -7,31 +7,39 @@
 
 ## Installation
 
-You can install the package via composer:
+Install the package via composer:
 
 ```bash
 composer require emanate/beem
 ```
 
-You can publish the config file with:
+Publish the config file using:
 
 ```bash
 php artisan vendor:publish --tag="beem"
 ```
 
-This is the contents of the published config file:
+These are the contents of the published config file:
 
 ```php
 return [
-    'api_key' => env('BEEM_SMS_API_KEY', ''),
+     'api_key' => env('BEEM_SMS_API_KEY', ''),
 
     'secret_key' => env('BEEM_SMS_SECRET_KEY', ''),
 
     'sender_name' => env('BEEM_SMS_SENDER_NAME', 'INFO'),
-    
-    'debug' => true,
 
+    /*
+     * If set to true, the phone addresses will be validated before sending the SMS.
+     * This will throw an exception if the phone number is invalid.
+     * Set it to false, if you don't want phone addresses validation.
+     */
     'validate_phone_addresses' => true,
+
+    /*
+     * Beem Sms Sending SMS URL. You can change this if you can use a different URL.
+     */
+    'sending_sms_url' => 'https://apisms.beem.africa/v1/send',
 ];
 ```
 
@@ -59,7 +67,7 @@ use Emanate\BeemSms\Facades\BeemSms;
 BeemSms::content('Your message here')->loadRecipients(User::all(), 'column_name')->send();
 ```
 
-If you plan on generating your phone number addresses, you could use the getRecipients() method. Be advised, that the getRecipients() method will receive variables in an array format.
+Instead of passing a collection of phone numbers, you could pass a single phone number in an array or an array of phone numbers.
 
 ```php
 use Emanate\BeemSms\Facades\BeemSms;
@@ -68,7 +76,7 @@ use Emanate\BeemSms\Facades\BeemSms;
 BeemSms::content('Your message here')->getRecipients(array('255700000000', '255711111111', '255722222222'))->send();
 ```
 
-Sometimes, casting a number of recipient addresses to array, so you could just pass them through the `getRecipients` method might be an overkill. Well, you could use the `unpackRecipients` method.
+You have a list of phone numbers and it's not a collection or an array, you can unpack them using the unpackRecipients() method.
 
 ```php
 use Emanate\BeemSms\Facades\BeemSms;
