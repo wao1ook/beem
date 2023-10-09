@@ -12,4 +12,6 @@ return [
     'debug' => true,
 
     'validate_phone_addresses' => true,
+
+    'sending_sms_url' => 'https://apisms.beem.africa/v1/send',
 ];

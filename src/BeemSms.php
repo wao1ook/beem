@@ -37,9 +37,9 @@ class BeemSms
     protected string $message;
 
     /**
-     * Beem Sms Base URL
+     * Beem Sms Sending SMS URL
      */
-    protected string $url;
+    protected string $sendingSMSUrl;
 
     /**
      * Array of phone addresses
@@ -60,7 +60,7 @@ class BeemSms
         $this->apiKey = config('beem.api_key');
         $this->secretKey = config('beem.secret_key');
         $this->senderName = config('beem.sender_name');
-        $this->url = 'https://apisms.beem.africa/v1/send';
+        $this->sendingSMSUrl = config('beem.sending_sms_url', 'https://apisms.beem.africa/v1/send');
     }
 
     public function apiKey(string $apiKey): BeemSms
@@ -83,7 +83,7 @@ class BeemSms
     public function send(): ResponseInterface
     {
         return (new Client())->post(
-            $this->url,
+            $this->sendingSMSUrl,
             [
                 'verify' => false,
                 'auth' => [$this->apiKey, $this->secretKey],
