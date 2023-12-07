@@ -11,5 +11,5 @@ return [
 
     'debug' => true,
 
-    'validate_phone_addresses' => true,
+    'validate_phone_addresses' => false,
 ];
