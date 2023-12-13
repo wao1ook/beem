@@ -39,6 +39,7 @@ return [
     /*
     *   Path to the class that handles the Phone Address Validation. Ensure correct mapping of your custom validator class by updating 
     *   the 'validator_class' configuration to point to the appropriate namespace and class name.
+    *   Please make sure the custom validator class implements the namespace Emanate\BeemSms\Contracts\Validator interface
     */
     'validator_class' => \Emanate\BeemSms\DefaultValidator::class,
 
@@ -108,7 +109,9 @@ BeemSms::content('Your message here')
 ```
 
 ### Validation
-Sometimes phone addresses are not exactly in the format that works for Beem, then the whole operation of sending messages to recipients fails. If you need to validate phone addresses, you need to leave the option **`validate_phone_addresses`** in the config to `true`. This library comes with a default validator that will handle some use-cases. In the occurrence that you need to use your own validator, you can do so by providing the path to the class on the **`validator_class`** option that you can find in the config.
+Sometimes phone addresses are not exactly in the format that works for Beem, then the whole operation of sending messages to recipients fails. If you need to validate phone addresses, you need to leave the option **`validate_phone_addresses`** in the config to `true`. This library comes with a default validator that will handle some use-cases. In the occurrence that you need to use your own validator, you can do so by providing the path to your custom class on the **`validator_class`** option that you can find in the config. 
+
+## Please make sure that your custom class implements the **`Emanate\BeemSms\Contracts\Validator`** interface.
 
 ## Testing
 You can run the tests with:
