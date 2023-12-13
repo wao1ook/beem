@@ -19,6 +19,7 @@ return [
     /*
     *   Path to the class that handles the Phone Address Validation. Ensure correct mapping of your custom validator class by updating 
     *   the 'validator_class' configuration to point to the appropriate namespace and class name.
+    *   Please make sure the custom validator class implements the Emanate\BeemSms\Contracts\Validator interface
     */
     'validator_class' => \Emanate\BeemSms\DefaultValidator::class,
 

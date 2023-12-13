@@ -162,7 +162,7 @@ class BeemSms
     protected function validateRecipientAddresses(array $recipients): array
     {
         if (config('beem.validate_phone_addresses')) {
-            return app(config('beem.validator_class', DefaultValidator::class))
+            return app(Validator::class)
                 ->new($recipients)
                 ->validate();
         }
