@@ -23,7 +23,7 @@ These are the contents of the published config file:
 
 ```php
 return [
-     'api_key' => env('BEEM_SMS_API_KEY', ''),
+    'api_key' => env('BEEM_SMS_API_KEY', ''),
 
     'secret_key' => env('BEEM_SMS_SECRET_KEY', ''),
 
@@ -37,11 +37,19 @@ return [
     'validate_phone_addresses' => true,
 
     /*
+    *   Path to the class that handles the Phone Address Validation. Ensure correct mapping of your custom validator class by updating 
+    *   the 'validator_class' configuration to point to the appropriate namespace and class name.
+    */
+    'validator_class' => \Emanate\BeemSms\DefaultValidator::class,
+
+    /*
      * Beem Sms Sending SMS URL. You can change this if you can use a different URL.
      */
     'sending_sms_url' => 'https://apisms.beem.africa/v1/send',
 ];
 ```
+
+> It is crucial to double-check and ensure that your config file is kept up to date with the latest settings and configurations.
 
 ## Usage
 
@@ -100,36 +108,7 @@ BeemSms::content('Your message here')
 ```
 
 ### Validation
-Sometimes phone addresses are not exactly in the format that works for Beem, then the whole operation of sending messages to recipients fails. If you need to validate phone addresses, you need to leave the option **`validate_phone_addresses`** in the config to `true`. This library comes with a default validator that will handle some use-cases. In the occurrence that you need to use your own validator, you can do so by creating a class that implements the `Emanate\BeemSms\Contracts\Validator` interface. Then you can bind your class to the interface in the `AppServiceProvider` class.
-
-```php
-use Emanate\BeemSms\Contracts\Validator;
-
-class MyCustomValidator implements Validator
-{
-    public function new(array $phoneAddresses) : Validator
-    {
-     // Create a new instance of your custom validator
-    }
-
-    public function validate(): array
-    {
-        // Your validation logic here
-    }
-}
-```
-
-```php
-use Emanate\BeemSms\Contracts\Validator;
-
-class AppServiceProvider extends ServiceProvider
-{
-    public $bindings = [
-        // ...
-        Validator::class => MyCustomValidator::class,
-    ];
-}
-```
+Sometimes phone addresses are not exactly in the format that works for Beem, then the whole operation of sending messages to recipients fails. If you need to validate phone addresses, you need to leave the option **`validate_phone_addresses`** in the config to `true`. This library comes with a default validator that will handle some use-cases. In the occurrence that you need to use your own validator, you can do so by providing the path to the class on the **`validator_class`** option that you can find in the config.
 
 ## Testing
 You can run the tests with:
