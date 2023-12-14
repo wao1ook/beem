@@ -7,19 +7,19 @@
 
 ## Installation
 
-You can install the package via composer:
+Install the package via composer:
 
 ```bash
 composer require emanate/beem
 ```
 
-You can publish the config file with:
+Publish the config file using:
 
 ```bash
 php artisan vendor:publish --tag="beem"
 ```
 
-This is the contents of the published config file:
+These are the contents of the published config file:
 
 ```php
 return [
@@ -28,12 +28,29 @@ return [
     'secret_key' => env('BEEM_SMS_SECRET_KEY', ''),
 
     'sender_name' => env('BEEM_SMS_SENDER_NAME', 'INFO'),
-    
-    'debug' => true,
 
+    /*
+     * If set to true, the phone addresses will be validated before sending the SMS.
+     * This will throw an exception if the phone number is invalid.
+     * Set it to false, if you don't want phone addresses validation.
+     */
     'validate_phone_addresses' => true,
+
+    /*
+    *   Path to the class that handles the Phone Address Validation. Ensure correct mapping of your custom validator class by updating 
+    *   the 'validator_class' configuration to point to the appropriate namespace and class name.
+    *   Please make sure the custom validator class implements the namespace Emanate\BeemSms\Contracts\Validator interface
+    */
+    'validator_class' => \Emanate\BeemSms\DefaultValidator::class,
+
+    /*
+     * Beem Sms Sending SMS URL. You can change this if you can use a different URL.
+     */
+    'sending_sms_url' => 'https://apisms.beem.africa/v1/send',
 ];
 ```
+
+> It is crucial to double-check and ensure that your config file is kept up to date with the latest settings and configurations.
 
 ## Usage
 
@@ -59,7 +76,7 @@ use Emanate\BeemSms\Facades\BeemSms;
 BeemSms::content('Your message here')->loadRecipients(User::all(), 'column_name')->send();
 ```
 
-If you plan on generating your phone number addresses, you could use the getRecipients() method. Be advised, that the getRecipients() method will receive variables in an array format.
+Instead of passing a collection of phone numbers, you could pass a single phone number in an array or an array of phone numbers.
 
 ```php
 use Emanate\BeemSms\Facades\BeemSms;
@@ -68,7 +85,7 @@ use Emanate\BeemSms\Facades\BeemSms;
 BeemSms::content('Your message here')->getRecipients(array('255700000000', '255711111111', '255722222222'))->send();
 ```
 
-Sometimes, casting a number of recipient addresses to array, so you could just pass them through the `getRecipients` method might be an overkill. Well, you could use the `unpackRecipients` method.
+You have a list of phone numbers and it's not a collection or an array, you can unpack them using the unpackRecipients() method.
 
 ```php
 use Emanate\BeemSms\Facades\BeemSms;
@@ -92,36 +109,9 @@ BeemSms::content('Your message here')
 ```
 
 ### Validation
-Sometimes phone addresses are not exactly in the format that works for Beem, then the whole operation of sending messages to recipients fails. If you need to validate phone addresses, you need to leave the option **`validate_phone_addresses`** in the config to `true`. This library comes with a default validator that will handle some use-cases. In the occurrence that you need to use your own validator, you can do so by creating a class that implements the `Emanate\BeemSms\Contracts\Validator` interface. Then you can bind your class to the interface in the `AppServiceProvider` class.
+Sometimes phone addresses are not exactly in the format that works for Beem, then the whole operation of sending messages to recipients fails. If you need to validate phone addresses, you need to leave the option **`validate_phone_addresses`** in the config to `true`. This library comes with a default validator that will handle some use-cases. In the occurrence that you need to use your own validator, you can do so by providing the path to your custom class on the **`validator_class`** option that you can find in the config. 
 
-```php
-use Emanate\BeemSms\Contracts\Validator;
-
-class MyCustomValidator implements Validator
-{
-    public function new(array $phoneAddresses) : Validator
-    {
-     // Create a new instance of your custom validator
-    }
-
-    public function validate(): array
-    {
-        // Your validation logic here
-    }
-}
-```
-
-```php
-use Emanate\BeemSms\Contracts\Validator;
-
-class AppServiceProvider extends ServiceProvider
-{
-    public $bindings = [
-        // ...
-        Validator::class => MyCustomValidator::class,
-    ];
-}
-```
+## Please make sure that your custom class implements the **`Emanate\BeemSms\Contracts\Validator`** interface.
 
 ## Testing
 You can run the tests with:

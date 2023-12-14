@@ -19,7 +19,11 @@ final class BeemSmsServiceProvider extends ServiceProvider implements Deferrable
 
         $this->app->bind('beem-sms', fn () => new BeemSms());
 
-        $this->app->bindIf(Validator::class, fn () => new DefaultValidator());
+        $this->app->bind(Validator::class, function () {
+            $validatorClass = config('beem.validator_class', DefaultValidator::class);
+            
+            return new $validatorClass();
+        });
     }
 
     /**
