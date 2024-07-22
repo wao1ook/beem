@@ -1,9 +1,9 @@
 <p align="center"><img src="https://beem.africa/wp-content/uploads/2020/12/Beem-menu-logo-02.svg" width="400"></p>
 
 # Beem Africa SMS Package for Laravel Applications
-[![Latest Stable Version](http://poser.pugx.org/emanate/beem/v)](https://packagist.org/packages/emanate/beem)
-[![Total Downloads](http://poser.pugx.org/emanate/beem/downloads)](https://packagist.org/packages/emanate/beem) 
-[![License](http://poser.pugx.org/emanate/beem/license)](https://packagist.org/packages/emanate/beem) 
+[![Latest Stable Version](https://poser.pugx.org/emanate/beem/v)](https://packagist.org/packages/emanate/beem)
+[![Total Downloads](https://poser.pugx.org/emanate/beem/downloads)](https://packagist.org/packages/emanate/beem) 
+[![License](https://poser.pugx.org/emanate/beem/license)](https://packagist.org/packages/emanate/beem) 
 
 ## Installation
 
