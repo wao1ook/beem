@@ -17,7 +17,7 @@ return [
     'validate_phone_addresses' => true,
 
     /*
-    *   Path to the class that handles the Phone Address Validation. Ensure correct mapping of your custom validator class by updating 
+    *   Path to the class that handles the Phone Address Validation. Ensure correct mapping of your custom validator class by updating
     *   the 'validator_class' configuration to point to the appropriate namespace and class name.
     *   Please make sure the custom validator class implements the Emanate\BeemSms\Contracts\Validator interface
     */
@@ -26,5 +26,5 @@ return [
     /*
      * Beem Sms Sending SMS URL. You can change this if you can use a different URL.
      */
-    'sending_sms_url' => 'https://apisms.beem.africa/v1/send',
+    'sending_sms_url' => 'https://apisms.beem.africa/v1',
 ];
