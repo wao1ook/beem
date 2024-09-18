@@ -40,7 +40,7 @@ class BeemSms
     /**
      * Beem Sms Sending SMS URL
      */
-    protected string $sendingSMSUrl;
+    protected string $url;
 
     /**
      * Array of phone addresses
@@ -61,7 +61,7 @@ class BeemSms
         $this->apiKey = config('beem.api_key');
         $this->secretKey = config('beem.secret_key');
         $this->senderName = config('beem.sender_name');
-        $this->sendingSMSUrl = config('beem.sending_sms_url', 'https://apisms.beem.africa/v1/send');
+        $this->url = config('beem.sending_sms_url', 'https://apisms.beem.africa/v1');
     }
 
     public function apiKey(string $apiKey): BeemSms
@@ -111,7 +111,7 @@ class BeemSms
     public function send(): ResponseInterface
     {
         return (new Client())->post(
-            $this->sendingSMSUrl,
+            $this->url . '/send',
             [
                 'verify' => false,
                 'auth' => [$this->apiKey, $this->secretKey],
@@ -134,13 +134,13 @@ class BeemSms
      */
     public function loadRecipients(mixed $collection, string $column = 'phone_number'): BeemSms
     {
-        $recipients = $collection->map(fn ($item) => $item[$column])->toArray();
+        $recipients = $collection->map(fn($item) => $item[$column])->toArray();
 
         return $this->getRecipients($recipients);
     }
 
     /**
-     * @param  array<string>  $recipients
+     * @param array<string> $recipients
      *
      * @throws Exception
      */
@@ -183,7 +183,7 @@ class BeemSms
     }
 
     /**
-     * @param  array<string>  $recipients
+     * @param array<string> $recipients
      *
      * @return array<string>
      */
@@ -199,7 +199,7 @@ class BeemSms
     }
 
     /**
-     * @param  array<string>  $recipients
+     * @param array<string> $recipients
      * @return array<int<0, max>, array<string, int<0, 999999999>|string>>
      *
      * @throws Exception
