@@ -11,6 +11,7 @@ use Emanate\BeemSms\Exceptions\InvalidBeemSenderName;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Facades\Log;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
@@ -75,6 +76,33 @@ class BeemSms
         $this->secretKey = $secretKey;
 
         return $this;
+    }
+
+    public function balance(): mixed
+    {
+        $client = new Client();
+
+        try {
+            $response = $client->get(
+                $this->url . '/vendors/balance',
+                [
+                    'verify' => false,
+                    'auth' => [$this->apiKey, $this->secretKey],
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ],
+                ]
+            );
+
+            $body = json_decode($response->getBody()->getContents(), true);
+
+            return $body['data']['credit_balance'] ?? null;
+
+        } catch (GuzzleException $e) {
+            Log::error('Failed to fetch SMS Balance: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     /**
