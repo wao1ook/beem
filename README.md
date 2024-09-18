@@ -108,6 +108,17 @@ BeemSms::content('Your message here')
 ->send();
 ```
 
+### Checking Balance
+
+To check your Beem SMS balance, you can use the `balance` method provided by the `BeemSms` facade. Here's an example:
+
+```php
+use Emanate\BeemSms\Facades\BeemSms;
+
+BeemSms::balance();
+```
+
+
 ### Validation
 Sometimes phone addresses are not exactly in the format that works for Beem, then the whole operation of sending messages to recipients fails. If you need to validate phone addresses, you need to leave the option **`validate_phone_addresses`** in the config to `true`. This library comes with a default validator that will handle some use-cases. In the occurrence that you need to use your own validator, you can do so by providing the path to your custom class on the **`validator_class`** option that you can find in the config. 
 
