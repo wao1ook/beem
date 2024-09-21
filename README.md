@@ -2,7 +2,8 @@
 
 # Beem Africa SMS Package for Laravel Applications
 [![Latest Stable Version](https://poser.pugx.org/emanate/beem/v)](https://packagist.org/packages/emanate/beem)
-[![Total Downloads](https://poser.pugx.org/emanate/beem/downloads)](https://packagist.org/packages/emanate/beem) 
+[![Total Downloads](https://poser.pugx.org/emanate/beem/downloads)](https://packagist.org/packages/emanate/beem)
+[![Monthly Downloads](https://poser.pugx.org/emanate/beem/d/monthly)](https://packagist.org/packages/emanate/beem)
 [![License](https://poser.pugx.org/emanate/beem/license)](https://packagist.org/packages/emanate/beem) 
 
 ## Installation
@@ -10,7 +11,7 @@
 Install the package via composer:
 
 ```bash
-composer require emanate/beem
+composer requires emanate/beem
 ```
 
 Publish the config file using:
@@ -38,13 +39,13 @@ return [
 
     /*
     *   Path to the class that handles the Phone Address Validation. Ensure correct mapping of your custom validator class by updating 
-    *   the 'validator_class' configuration to point to the appropriate namespace and class name.
+    *   The 'validator_class' configuration to point to the appropriate namespace and class name.
     *   Please make sure the custom validator class implements the namespace Emanate\BeemSms\Contracts\Validator interface
     */
     'validator_class' => \Emanate\BeemSms\DefaultValidator::class,
 
     /*
-     * Beem Sms Sending SMS URL. You can change this if you can use a different URL.
+     * Beem Sms Sending SMS URL. You can change this by using a different URL.
      */
     'sending_sms_url' => 'https://apisms.beem.africa/v1/send',
 ];
@@ -67,7 +68,7 @@ or a helper
 beem()->content('Your message here')->loadRecipients(User::all())->send();
 ```
 
-If you are using a different name for your column or property for phone numbers on your model or collection while using the loadRecipients() method, you should explicitly specify it on the method. By default, 'phone_number' is used.
+Suppose you are using a different name for your column or property for phone numbers on your model or collection while using the loadRecipients() method. In that case, you should explicitly specify it on the method. By default, 'phone_number' is used.
 
 ```php
 use Emanate\BeemSms\Facades\BeemSms;
