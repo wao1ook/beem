@@ -17,6 +17,7 @@ class DefaultValidator implements Validator
      * @var array<string>
      */
     protected static array $phoneAddressPrefix = [
+        '25561',
         '25562',
         '25565',
         '25567',
