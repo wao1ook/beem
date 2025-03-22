@@ -11,7 +11,7 @@
 Install the package via composer:
 
 ```bash
-composer requires emanate/beem
+composer require emanate/beem
 ```
 
 Publish the config file using:
