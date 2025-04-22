@@ -30,6 +30,7 @@ class DefaultValidator implements Validator
         '25576',
         '25577',
         '25578',
+        '25579',
     ];
 
     /**
