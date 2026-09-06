@@ -21,9 +21,11 @@ final class BeemSmsServiceProvider extends ServiceProvider implements Deferrable
 
         $this->app->bind('beem-multicountry-sms', fn () => new MulticountrySms());
 
+        $this->app->bind('beem-otp', fn () => new Otp());
+
         $this->app->bind(Validator::class, function () {
             $validatorClass = config('beem.validator_class', DefaultValidator::class);
-            
+
             return new $validatorClass();
         });
     }
@@ -51,8 +53,10 @@ final class BeemSmsServiceProvider extends ServiceProvider implements Deferrable
             Validator::class,
             BeemSms::class,
             MulticountrySms::class,
+            Otp::class,
             'beem-sms',
             'beem-multicountry-sms',
+            'beem-otp',
         ];
     }
 }

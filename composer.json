@@ -66,7 +66,8 @@
             ],
             "aliases": {
                 "BeemSms": "Emanate\\BeemSms\\Facades\\BeemSms",
-                "MulticountrySms": "Emanate\\BeemSms\\Facades\\MulticountrySms"
+                "MulticountrySms": "Emanate\\BeemSms\\Facades\\MulticountrySms",
+                "BeemOtp": "Emanate\\BeemSms\\Facades\\Otp"
             }
         }
     },

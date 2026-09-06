@@ -299,6 +299,49 @@ BeemSms::deleteTemplate($template['data']['id']);
 
 Every method that returns a decoded array (`balance`, `deliveryReport`, `senderNames`, `templates`, `createTemplate`, `updateTemplate`, `deleteTemplate`, `sendAndParse`) throws an `Emanate\BeemSms\Exceptions\BeemApiException` when Beem answers with an error. The exception code is Beem's own response code, and `BeemApiException::RESPONSE_CODES` maps every documented code to its meaning.
 
+## OTP
+
+The OTP API shares your SMS API key and secret but lives on its own host. Create an OTP application in the Beem dashboard, then set its `appId`:
+
+```dotenv
+BEEM_OTP_APP_ID=1234
+```
+
+Request a PIN, then verify what the user typed:
+
+```php
+use Emanate\BeemSms\Facades\Otp;
+
+$response = Otp::request('255700000000');
+
+$pinId = $response['data']['pinId'];
+// $response['data']['pinExpiryTimeInMinutes'], $response['data']['expiresInSeconds']
+
+Otp::verify($pinId, '1234');
+```
+
+`verify()` throws an `Emanate\BeemSms\Exceptions\OtpException` when the PIN is wrong, expired, reused or out of attempts. If you would rather branch on a boolean, use `check()`:
+
+```php
+if (Otp::check($pinId, $request->input('pin'))) {
+    // verified
+}
+```
+
+`OtpException::RESPONSE_CODES` maps every documented code (100–118) to its meaning, and the exception code is Beem's own. Whether the PIN arrives by SMS or WhatsApp depends on the channel configured for the application in the dashboard.
+
+The application ID and credentials can also be set per call:
+
+```php
+Otp::appId(4321)->accessToken('your-access-token')->request('255700000000');
+```
+
+> **Note on field names.** Beem's published OTP reference documents the response bodies and the response codes, but not the request body field names. This package sends `appId` and `msisdn` when requesting, and `pinId` and `pin` when verifying — `appId` is named in Beem's prerequisites guide, the rest are taken from the error-code table. If Beem's API expects something different, `parameter()` sets any additional body field:
+>
+> ```php
+> Otp::parameter('channel', 'whatsapp')->request('255700000000');
+> ```
+
 ## Multicountry SMS
 
 Multicountry SMS is a **separate Beem platform** from the SMS API above. It lives on its own host, authenticates with a username and password rather than an API key and secret, and takes uppercase form-encoded parameters. Configure it under the `multicountry` key:

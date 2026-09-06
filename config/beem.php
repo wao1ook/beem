@@ -63,6 +63,16 @@ return [
     'timeout' => env('BEEM_SMS_TIMEOUT', 30),
 
     /*
+     * Beem OTP. Shares the API key and secret above, but lives on its own host.
+     * The application ID comes from the OTP application you create in the Beem dashboard.
+     */
+    'otp' => [
+        'app_id' => env('BEEM_OTP_APP_ID'),
+
+        'url' => env('BEEM_OTP_URL', 'https://apiotp.beem.africa/v1'),
+    ],
+
+    /*
      * Beem Multicountry SMS. This is a separate platform from the Beem SMS API above:
      * it has its own host and authenticates with a username and password.
      */
