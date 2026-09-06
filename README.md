@@ -31,6 +31,12 @@ return [
     'sender_name' => env('BEEM_SMS_SENDER_NAME', 'INFO'),
 
     /*
+     * Optional access token. When set, it is sent in the Authorization header
+     * (without a Bearer prefix) instead of the API key and secret.
+     */
+    'access_token' => env('BEEM_ACCESS_TOKEN'),
+
+    /*
      * If set to true, the phone addresses will be validated before sending the SMS.
      * This will throw an exception if the phone number is invalid.
      * Set it to false, if you don't want phone addresses validation.
@@ -146,6 +152,27 @@ use Emanate\BeemSms\Facades\BeemSms;
 
 BeemSms::balance();
 ```
+
+### Authentication
+
+By default every request is authenticated with HTTP Basic auth, using your API key as the username and your secret as the password.
+
+Beem also accepts an access token, sent in the `Authorization` header **without** a `Bearer` prefix. Set it in the config and it replaces the key and secret everywhere:
+
+```dotenv
+BEEM_ACCESS_TOKEN=your-access-token
+```
+
+Or set it at runtime:
+
+```php
+BeemSms::accessToken('your-access-token')
+    ->content('Your message here')
+    ->getRecipients(['255700000000'])
+    ->send();
+```
+
+When an access token is configured, `api_key` and `secret_key` may be left empty. Call `withoutAccessToken()` to fall back to key and secret authentication for a single call.
 
 ### Overriding the sender name
 

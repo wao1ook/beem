@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @method static \Emanate\BeemSms\BeemSms apiKey(string $apiKey)
  * @method static \Emanate\BeemSms\BeemSms secretKey(string $secretKey)
+ * @method static \Emanate\BeemSms\BeemSms accessToken(string $accessToken)
+ * @method static \Emanate\BeemSms\BeemSms withoutAccessToken()
  * @method static \Emanate\BeemSms\BeemSms senderName(string $senderName)
  * @method static \Emanate\BeemSms\BeemSms content(string $message)
  * @method static \Emanate\BeemSms\BeemSms encoding(int $encoding)

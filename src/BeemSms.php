@@ -59,6 +59,11 @@ class BeemSms
     protected string $secretKey;
 
     /**
+     * Access token, used instead of the API key and secret when present.
+     */
+    protected ?string $accessToken = null;
+
+    /**
      * Sender Name registered by Beem
      */
     protected string $senderName;
@@ -117,10 +122,14 @@ class BeemSms
      */
     public function __construct()
     {
+        $accessToken = config('beem.access_token');
+
+        $this->accessToken = is_string($accessToken) && $accessToken !== '' ? $accessToken : null;
+
         $this->checkForInvalidCredentials();
 
-        $this->apiKey = config('beem.api_key');
-        $this->secretKey = config('beem.secret_key');
+        $this->apiKey = (string) config('beem.api_key');
+        $this->secretKey = (string) config('beem.secret_key');
         $this->senderName = config('beem.sender_name');
         $this->url = config('beem.sending_sms_url', 'https://apisms.beem.africa/v1');
         $this->publicUrl = config('beem.public_api_url', 'https://apisms.beem.africa/public/v1');
@@ -138,6 +147,32 @@ class BeemSms
     public function secretKey(string $secretKey): BeemSms
     {
         $this->secretKey = $secretKey;
+
+        return $this;
+    }
+
+    /**
+     * Authenticate with an access token instead of the API key and secret.
+     *
+     * Beem expects the raw token in the Authorization header, without a Bearer prefix.
+     */
+    public function accessToken(string $accessToken): BeemSms
+    {
+        if ($accessToken === '') {
+            throw new InvalidArgumentException('Access token must not be empty.');
+        }
+
+        $this->accessToken = $accessToken;
+
+        return $this;
+    }
+
+    /**
+     * Fall back to API key and secret authentication for the next request.
+     */
+    public function withoutAccessToken(): BeemSms
+    {
+        $this->accessToken = null;
 
         return $this;
     }
@@ -248,16 +283,7 @@ class BeemSms
     {
         return (new Client())->post(
             $this->url . '/send',
-            [
-                'verify' => config('beem.verify_ssl', true),
-                'timeout' => (float) config('beem.timeout', 30),
-                'auth' => [$this->apiKey, $this->secretKey],
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ],
-                'json' => $this->payload(),
-            ]
+            $this->httpOptions(['json' => $this->payload()])
         );
     }
 
@@ -468,6 +494,37 @@ class BeemSms
     }
 
     /**
+     * Build the Guzzle options shared by every request, including authentication.
+     *
+     * @param  array<string, mixed>  $options
+     * @return array<string, mixed>
+     */
+    protected function httpOptions(array $options = []): array
+    {
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ];
+
+        $base = [
+            'verify' => config('beem.verify_ssl', true),
+            'timeout' => (float) config('beem.timeout', 30),
+        ];
+
+        if ($this->accessToken !== null) {
+            $headers['Authorization'] = $this->accessToken;
+        } else {
+            $base['auth'] = [$this->apiKey, $this->secretKey];
+        }
+
+        $base['headers'] = array_merge($headers, $options['headers'] ?? []);
+
+        unset($options['headers']);
+
+        return array_merge($base, $options);
+    }
+
+    /**
      * Perform an authenticated request and return the decoded body.
      *
      * @param  array<string, mixed>  $options
@@ -478,16 +535,7 @@ class BeemSms
      */
     protected function request(string $method, string $url, array $options = []): array
     {
-        $options = array_merge([
-            'verify' => config('beem.verify_ssl', true),
-            'timeout' => (float) config('beem.timeout', 30),
-            'auth' => [$this->apiKey, $this->secretKey],
-            'http_errors' => false,
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ],
-        ], $options);
+        $options = $this->httpOptions(array_merge(['http_errors' => false], $options));
 
         $response = (new Client())->request($method, $url, $options);
 
@@ -554,6 +602,16 @@ class BeemSms
      */
     private function checkForInvalidCredentials(): void
     {
+        // An access token replaces the API key and secret, so only the sender name is required.
+        if ($this->accessToken !== null) {
+            match (true) {
+                config('beem.sender_name') === null || config('beem.sender_name') === '' => throw new InvalidBeemSenderName(),
+                default => $this,
+            };
+
+            return;
+        }
+
         match (true) {
             config('beem.api_key') === null || config('beem.api_key') === '' => throw new InvalidBeemApiKey(),
             config('beem.secret_key') === null || config('beem.secret_key') === '' => throw new InvalidBeemSecretKey(),

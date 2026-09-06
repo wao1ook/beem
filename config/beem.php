@@ -10,6 +10,12 @@ return [
     'sender_name' => env('BEEM_SMS_SENDER_NAME', 'INFO'),
 
     /*
+     * Optional access token. When set, it is sent in the Authorization header
+     * (without a Bearer prefix) instead of the API key and secret.
+     */
+    'access_token' => env('BEEM_ACCESS_TOKEN'),
+
+    /*
      * If set to true, the phone addresses will be validated before sending the SMS.
      * This will throw an exception if the phone number is invalid.
      * Set it to false, if you don't want phone addresses validation.
