@@ -61,4 +61,26 @@ return [
      * Guzzle request timeout, in seconds.
      */
     'timeout' => env('BEEM_SMS_TIMEOUT', 30),
+
+    /*
+     * Beem Multicountry SMS. This is a separate platform from the Beem SMS API above:
+     * it has its own host and authenticates with a username and password.
+     */
+    'multicountry' => [
+        'username' => env('BEEM_MULTICOUNTRY_USERNAME', ''),
+
+        'password' => env('BEEM_MULTICOUNTRY_PASSWORD', ''),
+
+        /*
+         * Default sender address. May be overridden per message with from().
+         */
+        'source_address' => env('BEEM_MULTICOUNTRY_SOURCE_ADDRESS'),
+
+        'send_url' => env('BEEM_MULTICOUNTRY_SEND_URL', 'https://api.blsmsgw.com:8443/bin/send.json'),
+
+        'balance_url' => env(
+            'BEEM_MULTICOUNTRY_BALANCE_URL',
+            'https://www.blsmsgw.com/portal/api/userAccountBalance'
+        ),
+    ],
 ];

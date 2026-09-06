@@ -18,6 +18,7 @@
     "require": {
         "php": "^8.0",
         "ext-curl": "*",
+        "ext-mbstring": "*",
         "guzzlehttp/guzzle": "^7.0",
         "illuminate/support": "^8.0|^9.0|^10.0|^11.0"
     },
@@ -64,7 +65,8 @@
                 "Emanate\\BeemSms\\BeemSmsServiceProvider"
             ],
             "aliases": {
-                "BeemSms": "Emanate\\BeemSms\\Facades\\BeemSms"
+                "BeemSms": "Emanate\\BeemSms\\Facades\\BeemSms",
+                "MulticountrySms": "Emanate\\BeemSms\\Facades\\MulticountrySms"
             }
         }
     },

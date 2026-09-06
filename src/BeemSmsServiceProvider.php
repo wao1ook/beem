@@ -19,6 +19,8 @@ final class BeemSmsServiceProvider extends ServiceProvider implements Deferrable
 
         $this->app->bind('beem-sms', fn () => new BeemSms());
 
+        $this->app->bind('beem-multicountry-sms', fn () => new MulticountrySms());
+
         $this->app->bind(Validator::class, function () {
             $validatorClass = config('beem.validator_class', DefaultValidator::class);
             
@@ -48,7 +50,9 @@ final class BeemSmsServiceProvider extends ServiceProvider implements Deferrable
         return [
             Validator::class,
             BeemSms::class,
+            MulticountrySms::class,
             'beem-sms',
+            'beem-multicountry-sms',
         ];
     }
 }

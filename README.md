@@ -299,7 +299,80 @@ BeemSms::deleteTemplate($template['data']['id']);
 
 Every method that returns a decoded array (`balance`, `deliveryReport`, `senderNames`, `templates`, `createTemplate`, `updateTemplate`, `deleteTemplate`, `sendAndParse`) throws an `Emanate\BeemSms\Exceptions\BeemApiException` when Beem answers with an error. The exception code is Beem's own response code, and `BeemApiException::RESPONSE_CODES` maps every documented code to its meaning.
 
-### Validation
+## Multicountry SMS
+
+Multicountry SMS is a **separate Beem platform** from the SMS API above. It lives on its own host, authenticates with a username and password rather than an API key and secret, and takes uppercase form-encoded parameters. Configure it under the `multicountry` key:
+
+```dotenv
+BEEM_MULTICOUNTRY_USERNAME=your-username
+BEEM_MULTICOUNTRY_PASSWORD=your-password
+BEEM_MULTICOUNTRY_SOURCE_ADDRESS=MyApp
+```
+
+```php
+use Emanate\BeemSms\Facades\MulticountrySms;
+
+MulticountrySms::from('MyApp')
+    ->to('255650000001')
+    ->content('Hello World')
+    ->send();
+```
+
+or the helper:
+
+```php
+beem_multicountry()->from('MyApp')->to('255650000001')->content('Hello World')->send();
+```
+
+An alphanumeric sender is limited to 11 GSM characters, and `SOURCEADDRTON=5` is applied for you. A leading `+` is stripped from the destination, which the platform requires.
+
+### Delivery reports
+
+The platform pushes delivery reports to a callback URL rather than exposing a polling endpoint:
+
+```php
+MulticountrySms::from('MyApp')
+    ->to('255650000001')
+    ->content('Hello World')
+    ->deliveryReport('https://example.com/dlr')
+    ->send();
+```
+
+Beem then POSTs `ID`, `DESTADDR` and `STATUS` (plus optional `DLRID`, `SOURCEADDR`, `MESSAGE`, `VP`) to that URL.
+
+### Binary, UDH and concatenation
+
+Unicode is detected by the platform automatically, so no flag is needed for it. Binary messages take a hex body:
+
+```php
+MulticountrySms::from('MyApp')
+    ->to('255650000001')
+    ->content('414243')
+    ->binary()
+    ->userDataHeader('0605040B8423F0')
+    ->ports(9200, 2948)
+    ->concatenated(reference: 42, sequence: 1, total: 3)
+    ->validityPeriod(3600)
+    ->send();
+```
+
+Anything not covered by a dedicated method can be set directly, and the name is uppercased for you:
+
+```php
+MulticountrySms::from('MyApp')->to('255650000001')->content('Hi')->parameter('SOURCEADDRNPI', 1)->send();
+```
+
+### Balance
+
+```php
+MulticountrySms::balance(); // ['account' => 'test', 'balance' => '1234.567']
+```
+
+### Error handling
+
+The platform answers HTTP 200 even on failure, so `send()` inspects the status inside the body and throws an `Emanate\BeemSms\Exceptions\MulticountrySmsException` for any non-zero status. The exception code is the platform status, and `MulticountrySmsException::STATUS_CODES` maps every documented code (0, 1, 2, 10, 11, 16) to its meaning.
+
+## Validation
 Sometimes phone addresses are not exactly in the format that works for Beem, then the whole operation of sending messages to recipients fails. If you need to validate phone addresses, you need to leave the option **`validate_phone_addresses`** in the config to `true`. This library comes with a default validator that will handle some use-cases. In the occurrence that you need to use your own validator, you can do so by providing the path to your custom class on the **`validator_class`** option that you can find in the config. 
 
 > Please make sure that your custom Validator class implements the **`Emanate\BeemSms\Contracts\Validator`** interface.
