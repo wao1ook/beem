@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Emanate\BeemSms;
 
 use Emanate\BeemSms\Contracts\Validator;
-use Illuminate\Contracts\Support\DeferrableProvider;
+use Emanate\BeemSms\Http\Middleware\VerifyBeemCallback;
 use Illuminate\Support\ServiceProvider;
 
-final class BeemSmsServiceProvider extends ServiceProvider implements DeferrableProvider
+final class BeemSmsServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
@@ -35,6 +35,8 @@ final class BeemSmsServiceProvider extends ServiceProvider implements Deferrable
      */
     public function boot(): void
     {
+        $this->registerInboundRoute();
+
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../config/beem.php' => $this->app->configPath('beem.php'),
@@ -44,6 +46,9 @@ final class BeemSmsServiceProvider extends ServiceProvider implements Deferrable
 
     /**
      * Get the services provided by the provider.
+     *
+     * The provider is no longer deferred, because a deferred provider does not boot
+     * on an ordinary request and so could never register the Two-Way callback route.
      *
      * @return array<string>
      */
@@ -58,5 +63,19 @@ final class BeemSmsServiceProvider extends ServiceProvider implements Deferrable
             'beem-multicountry-sms',
             'beem-otp',
         ];
+    }
+
+    /**
+     * Register the Two-Way SMS callback route, when it is enabled.
+     */
+    protected function registerInboundRoute(): void
+    {
+        if ( ! config('beem.two_way.enabled', false)) {
+            return;
+        }
+
+        $this->app['router']
+            ->middleware(VerifyBeemCallback::class)
+            ->group(__DIR__ . '/../routes/beem.php');
     }
 }

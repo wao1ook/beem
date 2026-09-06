@@ -63,6 +63,38 @@ return [
     'timeout' => env('BEEM_SMS_TIMEOUT', 30),
 
     /*
+     * Beem Two-Way SMS. Beem posts mobile-originated messages to a callback URL,
+     * which you register in the Beem dashboard. Set 'enabled' to true to have this
+     * package register the route, then listen for the InboundSmsReceived event.
+     */
+    'two_way' => [
+        'enabled' => env('BEEM_TWO_WAY_ENABLED', false),
+
+        /*
+         * Path the callback route is registered at. Give Beem the full URL to it.
+         */
+        'path' => env('BEEM_TWO_WAY_PATH', 'beem/inbound'),
+
+        /*
+         * Middleware applied to the callback route. The Beem credential check is
+         * always applied on top of whatever is listed here.
+         */
+        'middleware' => ['api'],
+
+        /*
+         * Authenticate every inbound callback before processing it. Only turn this
+         * off if you are authenticating the callback somewhere else.
+         */
+        'verify_credentials' => true,
+
+        /*
+         * Optional dedicated token for the callback, checked against the Authorization
+         * header. When empty, the access token and then the API key and secret are used.
+         */
+        'token' => env('BEEM_TWO_WAY_TOKEN'),
+    ],
+
+    /*
      * Beem OTP. Shares the API key and secret above, but lives on its own host.
      * The application ID comes from the OTP application you create in the Beem dashboard.
      */

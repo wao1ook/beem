@@ -299,6 +299,60 @@ BeemSms::deleteTemplate($template['data']['id']);
 
 Every method that returns a decoded array (`balance`, `deliveryReport`, `senderNames`, `templates`, `createTemplate`, `updateTemplate`, `deleteTemplate`, `sendAndParse`) throws an `Emanate\BeemSms\Exceptions\BeemApiException` when Beem answers with an error. The exception code is Beem's own response code, and `BeemApiException::RESPONSE_CODES` maps every documented code to its meaning.
 
+## Two-Way SMS
+
+Two-Way SMS is inbound only: Beem POSTs mobile-originated messages to a callback URL that you register in the Beem dashboard. Enable the route and give Beem its full URL:
+
+```dotenv
+BEEM_TWO_WAY_ENABLED=true
+BEEM_TWO_WAY_PATH=beem/inbound
+```
+
+Then listen for the event:
+
+```php
+use Emanate\BeemSms\Events\InboundSmsReceived;
+
+class ReplyToInboundSms
+{
+    public function handle(InboundSmsReceived $event): void
+    {
+        $message = $event->message;
+
+        $message->from();            // '255701000000'
+        $message->to();              // your short code or long number
+        $message->text();            // 'STOP please'
+        $message->keyword();         // 'STOP'
+        $message->transactionId();   // use this to stay idempotent
+        $message->channel();         // 'sms'
+        $message->mediaUrl();        // null when no media is attached
+        $message->custom();          // []
+        $message->currency();        // 'TZS'
+        $message->subscriberPrice(); // '100.00'
+        $message->billingPrice();    // '100.00'
+        $message->toArray();         // the raw payload
+    }
+}
+```
+
+The route answers Beem with the acknowledgement it expects — HTTP 200 and `{"transaction_id": "...", "successful": true}` — as soon as the event is dispatched. Do slow work in a queued listener so the callback is not held open, and use `transactionId()` to skip messages you have already processed, since Beem may retry.
+
+### Securing the callback
+
+Every inbound request is authenticated before the payload is touched. Beem's guidance is to "validate the API Key (or other auth token) on every request", but it does not fix a header name, so three shapes are accepted:
+
+1. HTTP Basic auth carrying your API key and secret
+2. an `Authorization` header equal to your configured `access_token`
+3. an `Authorization` header equal to a dedicated `BEEM_TWO_WAY_TOKEN`
+
+A `Bearer` or `Token` prefix is tolerated, and comparisons are constant-time. Unauthenticated requests get a 401 and dispatch no event.
+
+If you terminate authentication elsewhere — an API gateway, or your own middleware — set `two_way.verify_credentials` to `false`. Leave it on otherwise: with it off, anyone who learns your callback URL can inject fake inbound messages into your application.
+
+Extra middleware for the route goes in `two_way.middleware`; the credential check is always applied on top of it.
+
+> Enabling Two-Way SMS makes this package's service provider non-deferred, because a deferred provider does not boot on an ordinary request and could never register the route.
+
 ## OTP
 
 The OTP API shares your SMS API key and secret but lives on its own host. Create an OTP application in the Beem dashboard, then set its `appId`:
